@@ -96,19 +96,23 @@ void IMPLEMENT(Bucket_remove)(Bucket *bucket, int position)
 
 void IMPLEMENT(Bucket_insert)(Bucket *bucket, int position, char c)
 {
-	/*if (position==bucket->top +1){
+	assert(!Bucket_full(bucket));
+	assert(position >= 0 && position <= bucket->top+1);
+	if (position==bucket->top +1){
 		bucket->content[position]=c;
 	}
 	else {
 		char temp=bucket->content[position];
+		char temp2;
 		for (int i=position+1;i<=(bucket->top)+1;i++){
+			temp2=bucket->content[i];
 			bucket->content[i]=temp;
-			temp=bucket->content[i+1];
+			temp=temp2;
 		}
 		bucket->content[position]=c;
 	}
-	bucket->top=bucket->top+1;*/
-	provided_Bucket_insert(bucket, position, c);
+	bucket->top=bucket->top+1;
+	//provided_Bucket_insert(bucket, position, c);
 }
 
 void IMPLEMENT(Bucket_move)(Bucket *from, int position, Bucket *to)

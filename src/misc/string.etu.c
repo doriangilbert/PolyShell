@@ -276,7 +276,23 @@ char* IMPLEMENT(subString)(const char *start, size_t length)
 
 void IMPLEMENT(mkCommon)(char *result, const char *str)
 {
-    provided_mkCommon(result, str);
+    size_t tailleresult=stringLength(result);
+	size_t taillestr=stringLength(str);
+	size_t mintaille;
+	size_t i=0;
+	if (tailleresult>taillestr){
+		mintaille=taillestr;
+	}
+	else{
+		mintaille=tailleresult;
+	}
+	char machaine[mintaille];
+	while(result[i]==str[i] && i<mintaille){
+		machaine[i]=result[i];
+		i++;
+	}
+	copyStringWithLength(result,machaine,i+1);
+	//provided_mkCommon(result, str);
 }
 
 int IMPLEMENT(isNotEmpty)(const char *str)
@@ -294,7 +310,27 @@ int IMPLEMENT(isNotEmpty)(const char *str)
 
 char* IMPLEMENT(getProtString)(const char *str, char c)
 {
-    return provided_getProtString(str, c);
+    /*int i,j=0;
+	while(str[j]!='\0'){
+		if (str[j]==c){
+			i++;
+		}
+	}
+	size_t taille=stringLength(str);
+	char *machaine = malloc((sizeof(char)*taille)+i); //MALLOC : NE PAS OUBLIER DE FREE
+	j=0;
+	int b=0;
+	while(str[j]!='\0'){
+		machaine[b]=str[j];
+		if(str[j]==c){
+			b++;
+			machaine[b]=c;
+		}
+		b++;
+		j++;
+	}
+	return machaine;*/
+	return provided_getProtString(str, c);
 }
 
 char* IMPLEMENT(getRealString)(const char *str, char c, char **firstNotEscaped)
