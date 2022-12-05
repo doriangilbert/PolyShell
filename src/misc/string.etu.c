@@ -176,70 +176,37 @@ int IMPLEMENT(stringCompare)(const char *str1, const char *str2)
 
 const char* IMPLEMENT(indexOfString)(const char *foin, const char *aiguille, int csensitive)
 {
-	/*size_t TailleFoin,TailleAiguille;
+	size_t TailleFoin,TailleAiguille;
 	TailleFoin=stringLength(foin);
 	TailleAiguille=stringLength(aiguille);
 	if (TailleFoin<TailleAiguille){
 		return NULL;
 	}
-	size_t k;
-	char foin2[TailleFoin] ,aiguille2[TailleAiguille];
-	if (csensitive==0){
-		for(k=0;k<TailleAiguille;k++){
-			aiguille2[k]=toUpperCase(aiguille[k]);
-		}
-		for(k=0;k<TailleFoin;k++){
-			foin2[k]=toUpperCase(foin[k]);
-		}
-	}
-	else{
-		for(k=0;k<TailleAiguille;k++){
-			aiguille2[k]=aiguille[k];
-		}
-		for(k=0;k<TailleFoin;k++){
-			foin2[k]=foin[k];
-		}
-	}
-	size_t i,j,l;
+	size_t i;
 	int Booleen;
-	for (i=0;i<=(TailleFoin-TailleAiguille+1);i++){
-		Booleen=1;
-		j=0;
-		while(aiguille2[j]!='\0'||Booleen==1){
-			if (aiguille2[j]!=foin2[i+j]){
-				Booleen=0;
-			}
-			j++;
-		}
-		if (Booleen==1){
-			for (l=0;l<=i;l++){
-				foin++;
-			}
+	for (i=0;i<=(TailleFoin-TailleAiguille);i++){
+		Booleen=(startWith(foin,aiguille,csensitive)==NULL);
+		if (Booleen==0){
 			return foin;
 		}
+		foin++;
 	}
-	return NULL;*/
+	return NULL;
 	
-	/*size_t TailleFoin,TailleAiguille;
-	TailleFoin=stringLength(foin);
-	TailleAiguille=stringLength(aiguille);
-	if (TailleFoin<TailleAiguille){
-		return NULL;
-	}
-	char *foin2 = foin, *aiguille2 = aiguille;
-	while (*foin2) {
-		if  (*foin2 == *aiguille2) {
-			
-		}
-		foin2++;
-	}
-	*/
-	return provided_indexOfString(foin, aiguille, csensitive);
+	//return provided_indexOfString(foin, aiguille, csensitive);
 }
 
 char* IMPLEMENT(concatenateStrings)(const char *str1, const char *str2, size_t minDestSize)
 {
-    return provided_concatenateStrings(str1, str2, minDestSize);
+	size_t taille = (stringLength(str1) + stringLength(str2)) + 1;
+	if (taille < minDestSize) {
+		taille = minDestSize;
+	}
+    char *str = malloc(sizeof(char)*taille); //MALLOC : NE PAS OUBLIER DE FREE
+	copyStringWithLength(str, str1, taille);
+	copyStringWithLength(str+stringLength(str1), str2, taille);
+	return str;
+	//return provided_concatenateStrings(str1, str2, minDestSize);
 }
 
 void IMPLEMENT(copyStringWithLength)(char *dest, const char * src, size_t destSize)
@@ -259,7 +226,17 @@ void IMPLEMENT(copyStringWithLength)(char *dest, const char * src, size_t destSi
 
 char* IMPLEMENT(mkReverse)(char *str)
 {
-    return provided_mkReverse(str);
+    char temp;
+	size_t TailleSTR=stringLength(str);
+	if (TailleSTR>0){
+		for (size_t i=0;i<=(TailleSTR/2)-1;i++){
+		temp=str[i];
+		str[i]=str[TailleSTR-i-1];
+		str[TailleSTR-i-1]=temp;
+		}
+	}
+	return str;
+	//return provided_mkReverse(str);
 }
 
 const char* IMPLEMENT(startWith)(const char *str, const char *prefix, int csensitive)
@@ -290,7 +267,11 @@ int IMPLEMENT(belongs)(char c, const char *str)
 
 char* IMPLEMENT(subString)(const char *start, size_t length)
 {
-    return provided_subString(start, length);
+    size_t taille=length+1;
+	char *str = malloc(sizeof(char)*taille); //MALLOC : NE PAS OUBLIER DE FREE
+	copyStringWithLength(str,start,taille);
+	return str;
+	//return provided_subString(start, length);
 }
 
 void IMPLEMENT(mkCommon)(char *result, const char *str)
