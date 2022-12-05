@@ -69,20 +69,53 @@ size_t IMPLEMENT(Input_size)(const Input *input)
 
 char IMPLEMENT(Input_get)(const Input *input)
 {
-    /*if (input->current!=NULL){
-		if (input->current->bucket!=NULL){
-			if (input->current->bucket->content[input->pos]!=""){
-				return input->current->bucket[input->pos];
+    if (input->current != NULL) {
+		if (input->current->bucket.top != -1) {
+			if (input->current->bucket.content[input->pos] != '\0') {
+				return input->current->bucket.content[input->pos];
 			}
 		}
 	}
-	return '\0';*/
-	return provided_Input_get(input);
+	return '\0';
+	//return provided_Input_get(input);
 }
 
 int IMPLEMENT(Input_insert)(Input *input, char c)
 {
-    return provided_Input_insert(input, c);
+    //cas liste vide
+	if (input->current == NULL) {
+		input->current = Cell_new(); //allocation dyn + init WARNING : Ne pas oublier de désallouer -> FUITE MEMOIRE
+		if (input->current == NULL) {
+			return 1;
+		}
+		Bucket_insert(&input->current->bucket, 0, c);
+		input->pos = 1;
+	}
+	else {
+		//cas particulier 2 : bucket plein
+		if (Bucket_full(&input->current->bucket)) {
+			Cell* newCell = Cell_new();
+			if (newCell == NULL) {
+				return 1;
+			}
+			Cell_insertAfter(input->current, newCell);
+			if (input->pos > input->current->bucket.top) {
+				//impossible de déplacer ce qui est à droite de pos car pos == top + 1
+				input->current = newCell;
+				input->pos = 0;
+			}
+			else {
+				//on déplace du contenu dans la nouvelle cellule pour faire de la place
+				Bucket_move(&input->current->bucket, input->pos, &newCell->bucket);
+			}
+			//dans tous les cas, il y a maintenant de la place dans current->bucket et OK pour insérer à la position pos
+		}
+		//cas général
+		Bucket_insert(&input->current->bucket, input->pos, c);
+		Input_moveRight(input);
+	}
+	return 0;
+	//return provided_Input_insert(input, c);
 }
 
 int IMPLEMENT(Input_backspace)(Input *input)
@@ -97,18 +130,68 @@ int IMPLEMENT(Input_del)(Input *input)
 
 int IMPLEMENT(Input_moveLeft)(Input *input)
 {
-    return provided_Input_moveLeft(input);
+    if (input->current != NULL) {
+		if (input->pos == 0) {
+			if (input->current->previous == NULL) {
+				return 1;
+			}
+			else {
+				input->current = input->current->previous;
+				input->pos = input->current->bucket.top;
+				return 0;
+			}
+		}
+		else {
+			input->pos = input->pos-1;
+			return 0;
+		}
+	}
+	return 1;
+	//return provided_Input_moveLeft(input);
 }
 
 int IMPLEMENT(Input_moveRight)(Input *input)
 {
-    return provided_Input_moveRight(input);
+	/*if (input->current != NULL){
+		if (input->pos==input->current->bucket.top){
+			if (input->current->next==NULL){
+				if(input->pos+1==BUCKET_SIZE){
+					Cell *temp;
+					Cell_init(temp)
+					temp->previous=input
+					
+				}
+				else{
+					input->pos=input->pos+1;
+					return 0;
+				}
+			}
+			else{
+				input->current = input->current->next;
+				input->pos = 0;
+				return 0;
+			}
+		}
+		else{
+			input->pos=input->pos+1;
+			return 0;
+		}
+	}
+	return 1;*/
+	return provided_Input_moveRight(input);
 }
 
 char* IMPLEMENT(Input_toString)(const Input *input)
 {
     return provided_Input_toString(input);
 }
+
+/* POUR TESTER : (typedef Input InputIterator)
+ * InputIterator it;
+ * for (InputIterator_init(&it) ; !InputIterator_isOver(&it) ; InputIterator_next(&it)) {
+ * 		printf("%c", InputIterator_get(&it);
+ * }
+*/
 
 void IMPLEMENT(InputIterator_initIterator)(const Input *input, InputIterator *inputIterator)
 {
