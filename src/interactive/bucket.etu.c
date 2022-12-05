@@ -117,7 +117,14 @@ void IMPLEMENT(Bucket_insert)(Bucket *bucket, int position, char c)
 
 void IMPLEMENT(Bucket_move)(Bucket *from, int position, Bucket *to)
 {
-    provided_Bucket_move(from, position, to);
+    char temp;
+	int top=from->top;
+	for (int i=0;i<=top-position;i++){
+		temp=from->content[position];
+		Bucket_remove(from,position);
+		Bucket_insert(to,i,temp);
+	}
+	//provided_Bucket_move(from, position, to);
 }
 
 int IMPLEMENT(Bucket_empty)(const Bucket *bucket)

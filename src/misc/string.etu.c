@@ -310,27 +310,29 @@ int IMPLEMENT(isNotEmpty)(const char *str)
 
 char* IMPLEMENT(getProtString)(const char *str, char c)
 {
-    /*int i,j=0;
+    int j=0;
+	size_t taille=stringLength(str)+1;
 	while(str[j]!='\0'){
 		if (str[j]==c){
-			i++;
+			taille++;
 		}
+		j++;
 	}
-	size_t taille=stringLength(str);
-	char *machaine = malloc((sizeof(char)*taille)+i); //MALLOC : NE PAS OUBLIER DE FREE
+	char *machaine = malloc((sizeof(char)*(taille))); //MALLOC : NE PAS OUBLIER DE FREE
 	j=0;
 	int b=0;
 	while(str[j]!='\0'){
 		machaine[b]=str[j];
 		if(str[j]==c){
 			b++;
-			machaine[b]=c;
+			machaine[b]=str[j];
 		}
 		b++;
 		j++;
 	}
-	return machaine;*/
-	return provided_getProtString(str, c);
+	machaine[b]='\0';
+	return machaine;
+	//return provided_getProtString(str, c);
 }
 
 char* IMPLEMENT(getRealString)(const char *str, char c, char **firstNotEscaped)

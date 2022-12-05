@@ -25,6 +25,7 @@
  *-------------------------------------------------------------------------*/
 
 #include "interactive/all.h"
+#include "misc/string.h"
 
 // #########################################################################
 // #########################################################################
@@ -70,15 +71,11 @@ size_t IMPLEMENT(Input_size)(const Input *input)
 char IMPLEMENT(Input_get)(const Input *input)
 {
 	// A REVOIR
-    /*if (input->current != NULL) {
-		if (input->current->bucket.top != -1) {
-			if (input->current->bucket.content[input->pos] != '\0') {
-				return input->current->bucket.content[input->pos];
-			}
-		}
+    if (input!=NULL && input->current != NULL && !Bucket_empty(&input->current->bucket) && input->pos<(input->current->bucket.top+1)){
+		return input->current->bucket.content[input->pos];
 	}
-	return '\0';*/
-	return provided_Input_get(input);
+	return '\0';
+	//return provided_Input_get(input);
 }
 
 int IMPLEMENT(Input_insert)(Input *input, char c)
@@ -153,32 +150,26 @@ int IMPLEMENT(Input_moveLeft)(Input *input)
 
 int IMPLEMENT(Input_moveRight)(Input *input)
 {
-	/*if (input->current != NULL){
+	//A FAIRE
+	/*if (input != NULL && input->current!=NULL && !Bucket_empty(&input->current->bucket)){
 		if (input->pos==input->current->bucket.top){
-			if (input->current->next==NULL){
-				if(input->pos+1==BUCKET_SIZE){
-					Cell *temp;
-					Cell_init(temp)
-					temp->previous=input
-					
-				}
-				else{
-					input->pos=input->pos+1;
-					return 0;
-				}
-			}
-			else{
-				input->current = input->current->next;
-				input->pos = 0;
+			if (input->current->next!=NULL){
+				input->current=input->current->next;
+				input->pos=0;
 				return 0;
+			}	
+			else{
+				return 1;
 			}
 		}
 		else{
-			input->pos=input->pos+1;
+			input->pos++;
 			return 0;
 		}
 	}
-	return 1;*/
+	else{
+		return 1;
+	}*/
 	return provided_Input_moveRight(input);
 }
 
@@ -231,7 +222,11 @@ char IMPLEMENT(InputIterator_get)(const InputIterator *inputIterator)
 
 int IMPLEMENT(Input_load)(Input *input, const char *cmd)
 {
-    return provided_Input_load(input, cmd);
+    if (cmd==NULL) return 1;
+	Input_clear(input);
+	for (size_t i=0; i<=stringLength(cmd);i++) Input_insert(input,cmd[i]);
+	return 0;
+	//return provided_Input_load(input, cmd);
 }
 
 char* IMPLEMENT(Input_getEditedWord)(const Input *input)

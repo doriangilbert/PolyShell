@@ -63,7 +63,8 @@ void IMPLEMENT(Fifo_finalize)(Fifo *fifo)
 
 void IMPLEMENT(Fifo_clear)(Fifo *fifo)
 {
-    provided_Fifo_clear(fifo);
+    while(!Fifo_empty(fifo)) Fifo_pop(fifo);
+	//provided_Fifo_clear(fifo);
 }
 
 // On ajoute au niveau de tail et on incrémente tail
