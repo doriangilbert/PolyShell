@@ -335,6 +335,9 @@ char* IMPLEMENT(getProtString)(const char *str, char c)
 	//return provided_getProtString(str, c);
 }
 
+/* "cd /pa##l/ # commentaire" -> "cd /pa#l/ # commentaire" (on laisse le # seul mais on aura placé le pointeur firstNotEscaped, 
+si on fait par la suite *firstNotEscaped = '\0' on aura "cd /pa#l/ " */
+
 char* IMPLEMENT(getRealString)(const char *str, char c, char **firstNotEscaped)
 {
     // *firstNotEscaped = ...

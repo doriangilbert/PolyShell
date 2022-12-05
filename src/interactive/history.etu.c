@@ -74,7 +74,27 @@ int IMPLEMENT(History_init)(History *history, const char *filename, unsigned int
 
 void IMPLEMENT(History_finalize)(History *history, const char *filename)
 {
-    provided_History_finalize(history, filename);
+    if (filename) {
+		char *path = prependHomeDir(duplicateString(filename)); //Gérer le ~ qui symbolise le répertoire utilisateur (/home/user)
+		if (path) {
+			FILE *fichier=fopen(path,"w");
+			if (fichier) {
+				char *chaine;
+				while(!Fifo_empty(&history->storage)){
+					chaine=duplicateString(history->storage.storage[history->storage.head]);
+					fprintf(fichier, getProtString(chaine,'#'));
+					fprintf(fichier,"\n");
+					Fifo_pop(&history->storage);
+				}
+				fclose(fichier);
+			}
+			free(path);
+		}
+	}
+	history->position=history->storage.head;
+	Fifo_finalize(&history->storage);
+	//Fifo_finalize à la fin
+	//provided_History_finalize(history, filename);
 }
 
 void IMPLEMENT(History_clear)(History *history)
@@ -84,15 +104,33 @@ void IMPLEMENT(History_clear)(History *history)
 
 void IMPLEMENT(History_add)(History *history, const char *cmd)
 {
-    provided_History_add(history, cmd);
+    /*if (Fifo_full(&history->storage)){
+		Fifo_pop(&history->storage);
+	}
+	if (Fifo_push(&history->storage,cmd)) history->position = history->storage.tail;*/
+	provided_History_add(history, cmd);
 }
 
 const char* IMPLEMENT(History_up)(History *history)
 {
-    return provided_History_up(history);
+    if(history->position == history->storage.head) return NULL;
+	else{
+		history->position=(history->position-1)%history->storage.capacity;
+		return (const char*) history->storage.storage[history->position];
+	}
+	//return provided_History_up(history);
 }
 
 const char* IMPLEMENT(History_down)(History *history)
 {
-    return provided_History_down(history);
+    if(history->position == history->storage.tail) return NULL;
+	else if(history->position == history->storage.tail -1 % history->storage.capacity){
+		history->position = history->storage.tail;
+		return "";
+	}
+	else{
+		history->position=(history->position+1)%history->storage.capacity;
+		return (const char*) history->storage.storage[history->position];
+	}
+	//return provided_History_down(history);
 }

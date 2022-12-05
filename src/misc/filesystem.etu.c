@@ -68,6 +68,9 @@ MAKE_DEL_0(FileIterator)
 
 //FileIterator permet notamment de gérer les commentaires (ignorer les lignes qui débutent par #) avec getRealString (et firstNotEscaped)
 
+/* 1) initialiser init et current
+2) Lire une première ligne (Conseil : Appeler next) (on doit pouvoir appeler get si isOver=false) */
+
 int IMPLEMENT(FileIterator_init)(FileIterator *fIterator, FILE *file)
 {
     return provided_FileIterator_init(fIterator, file);
@@ -78,15 +81,26 @@ void IMPLEMENT(FileIterator_finalize)(FileIterator *fIterator)
     provided_FileIterator_finalize(fIterator);
 }
 
+//Dernière ligne atteinte
 int IMPLEMENT(FileIterator_isOver)(const FileIterator *fIterator)
 {
     return provided_FileIterator_isOver(fIterator);
 }
 
+//Renvoie current
 const char* IMPLEMENT(FileIterator_get)(const FileIterator *fIterator)
 {
     return provided_FileIterator_get(fIterator);
 }
+
+//Changer current pour qu'il contienne une nouvelle ligne
+
+/* - Lire une ligne (Conseil : Utiliser fgets)
+- Gérer les commentaires : - getRealString - *firstNotEscaped = '\0'; si non NULL
+Simplifier tous les ## et on détecte avec firstNotEscape si il y a un # tout seul il s'agit d'un commentaire
+char *firstNotEscaped;
+char *res = getRealString(line, '#', &firstNotEscaped)
+if (firstNotEscaped) *firstNotEscaped = '\0' (on supprime tout ce qu'il y a après le # seul) */
 
 void IMPLEMENT(FileIterator_next)(FileIterator *fIterator)
 {

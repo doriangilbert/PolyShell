@@ -33,6 +33,8 @@
 MAKE_NEW_1(Pattern, const char*)
 MAKE_DEL_0(Pattern)
 
+//REGEX EN BONUS
+
 int IMPLEMENT(Pattern_init)(Pattern *preg, const char *pattern)
 {
     return provided_Pattern_init(preg, pattern);
