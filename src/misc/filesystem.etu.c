@@ -66,6 +66,8 @@ void IMPLEMENT(FolderIterator_next)(FolderIterator *fIterator)
 MAKE_NEW_1(FileIterator, FILE*)
 MAKE_DEL_0(FileIterator)
 
+//FileIterator permet notamment de gérer les commentaires (ignorer les lignes qui débutent par #) avec getRealString (et firstNotEscaped)
+
 int IMPLEMENT(FileIterator_init)(FileIterator *fIterator, FILE *file)
 {
     return provided_FileIterator_init(fIterator, file);

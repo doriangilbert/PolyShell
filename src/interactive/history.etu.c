@@ -25,6 +25,9 @@
  *-------------------------------------------------------------------------*/
 
 #include "interactive/history.h"
+#include "interactive/autocomplete.h"
+#include "misc/string.h"
+#include "misc/filesystem.h"
 
 // #########################################################################
 // #########################################################################
@@ -33,10 +36,41 @@
 MAKE_NEW_2(History, const char*, unsigned int)
 MAKE_DEL_1(History, const char*)
 
+//Utiliser les fonctions de fifo
+
 int IMPLEMENT(History_init)(History *history, const char *filename, unsigned int length)
 {
-    return provided_History_init(history, filename, length);
+    //Init
+	if (Fifo_init(&history->storage, length, COMPOSE)) { //Fifo_init = MALLOC, Ne pas oublier le & car Fifo_init attend Fifo *
+		return 1;
+	}
+	history->position = history->storage.tail;
+	
+	//Lecture du fichier
+	if (filename) {
+		char *path = prependHomeDir(duplicateString(filename)); //Gérer le ~ qui symbolise le répertoire utilisateur (/home/user)
+		if (path) {
+			FILE *fichier=fopen(path,"r");
+			if (fichier) {
+				FileIterator *iterator = FileIterator_new(fichier);
+				if (iterator) {
+					while (!FileIterator_isOver(iterator)) {
+						History_add(history, FileIterator_get(iterator));
+						FileIterator_next(iterator);
+					}
+					FileIterator_delete(iterator);
+				}
+				fclose(fichier);
+			}
+			free(path);
+		}
+	}
+	return 0;
+	//return provided_History_init(history, filename, length);
 }
+
+//Ecriture : Meme structure que la lecture (voir init, changer uniquement le contenu de if(fichier) ), pas de FileIterator, on utilise fprintf avec un parcours normal
+//On veut conserver les commentaires dans l'historique (débute par #) en utilisant getProtString, on n'écrit pas la chaine dans le fichier mais getProtString(chaine)
 
 void IMPLEMENT(History_finalize)(History *history, const char *filename)
 {

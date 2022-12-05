@@ -90,14 +90,26 @@ int IMPLEMENT(Fifo_push)(Fifo *fifo, const char *str)
 }
 
 const char* IMPLEMENT(Fifo_front)(const Fifo *fifo)
-{
-    return provided_Fifo_front(fifo);
+{ 
+	if (Fifo_empty(fifo)){
+		return NULL;
+	}
+	else{
+		const char* pt = &fifo->storage[fifo->head][0];
+		return pt;
+	}
+	//return provided_Fifo_front(fifo);
 }
 
 //On enlève au niveau de head et on incrémente head
 int IMPLEMENT(Fifo_pop)(Fifo *fifo)
 {
-    return provided_Fifo_pop(fifo);
+	if (Fifo_empty(fifo)){
+		return 1;
+	}
+	fifo->head = (fifo->head+1) % fifo->capacity;
+	return 0; 
+	//return provided_Fifo_pop(fifo);
 }
 
 //On va parcourir la file de head à tail donc pas possible d'incrémenter simplement car tableau circulaire (revenir au début une fois à la fin

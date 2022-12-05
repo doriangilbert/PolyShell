@@ -69,15 +69,16 @@ size_t IMPLEMENT(Input_size)(const Input *input)
 
 char IMPLEMENT(Input_get)(const Input *input)
 {
-    if (input->current != NULL) {
+	// A REVOIR
+    /*if (input->current != NULL) {
 		if (input->current->bucket.top != -1) {
 			if (input->current->bucket.content[input->pos] != '\0') {
 				return input->current->bucket.content[input->pos];
 			}
 		}
 	}
-	return '\0';
-	//return provided_Input_get(input);
+	return '\0';*/
+	return provided_Input_get(input);
 }
 
 int IMPLEMENT(Input_insert)(Input *input, char c)

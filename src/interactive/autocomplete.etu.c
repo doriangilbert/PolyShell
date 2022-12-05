@@ -30,6 +30,7 @@
 // #########################################################################
 // #########################################################################
 
+//A ignorer dans un premier temps
 char* IMPLEMENT(prependHomeDir)(char *str)
 {
     return provided_prependHomeDir(str);
