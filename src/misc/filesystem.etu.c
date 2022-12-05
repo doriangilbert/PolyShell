@@ -25,6 +25,7 @@
  *-------------------------------------------------------------------------*/
 
 #include "misc/filesystem.h"
+#include "misc/string.h"
 
 // #########################################################################
 // #########################################################################
@@ -33,34 +34,85 @@
 MAKE_NEW_2(FolderIterator, const char*, int)
 MAKE_DEL_0(FolderIterator)
 
+/*Utilisation :
+FolderIterator it;
+if (FolderIterator_init(&it, "/home/ronan", 0)) {
+	printf("Erreur init!");
+	exit(1);
+}
+while (!FolderIterator_isOver(&it)) {
+	printf("%s\n", FolderIterator_get(&it));
+	FolderIterator_next(&it);
+}
+FolderIterator_finalize(&it);
+exit(0);*/
+
+/* L'argument path ne contient pas de . ou de .. , il s'agit deja d'un chemin absolu (pas de prependHomeDir)
+Ouvrir avec opendir()
+Lire la première entrée dans init avec FolderIterator_next
+Si skipSpecials est vrai (il faut ignorer les sous dossiers . et ..) et qu'il y a . ou .. en sortie de readDir il faut refaire un ou plusieurs readdir pour passer au sous dossier suivant*/
+
 int IMPLEMENT(FolderIterator_init)(FolderIterator *fIterator, const char *path, int skipSpecials)
 {
-    return provided_FolderIterator_init(fIterator, path, skipSpecials);
+    fIterator->skipSpecials=skipSpecials;
+	if(path){
+		DIR* dossier=opendir(path);
+		if (dossier){
+			fIterator->dir=dossier;
+			fIterator->ent=NULL;
+			FolderIterator_next(fIterator);
+			return 0;
+		}
+	}
+	return 1;
+	
+	//return provided_FolderIterator_init(fIterator, path, skipSpecials);
 }
 
 void IMPLEMENT(FolderIterator_finalize)(FolderIterator *fIterator)
 {
-    provided_FolderIterator_finalize(fIterator);
+	fIterator->skipSpecials=0;
+	closedir(fIterator->dir);
+	fIterator->ent=NULL;
+	//provided_FolderIterator_finalize(fIterator);
 }
 
 int IMPLEMENT(FolderIterator_isOver)(const FolderIterator *fIterator)
 {
-    return provided_FolderIterator_isOver(fIterator);
+	return fIterator->ent == NULL;
+	//return provided_FolderIterator_isOver(fIterator);
 }
 
 const char* IMPLEMENT(FolderIterator_get)(const FolderIterator *fIterator)
 {
-    return provided_FolderIterator_get(fIterator);
+    if(!FolderIterator_isOver(fIterator)){
+		return fIterator->ent->d_name;
+	}
+	return "";
+	//return provided_FolderIterator_get(fIterator);
 }
 
 int IMPLEMENT(FolderIterator_isDir)(const FolderIterator *fIterator)
 {
-    return provided_FolderIterator_isDir(fIterator);
+    /*if(!FolderIterator_isOver(fIterator)){
+		if (fIterator->ent->d_type == DT_DIR) return 0;
+	}
+	return 1;*/
+	return provided_FolderIterator_isDir(fIterator);
 }
 
 void IMPLEMENT(FolderIterator_next)(FolderIterator *fIterator)
 {
-    provided_FolderIterator_next(fIterator);
+	/*struct dirent* m=readdir(fIterator->dir);
+	if(m!=NULL){
+		fIterator->ent=m;
+		if(fIterator->skipSpecials){
+			while(!FolderIterator_isOver(fIterator) && (stringCompare(fIterator->ent->d_name,".") || stringCompare(fIterator->ent->d_name,".."))){
+				fIterator->ent=readdir(fIterator->dir);
+			}
+		}
+	}*/
+	provided_FolderIterator_next(fIterator);
 }
 
 MAKE_NEW_1(FileIterator, FILE*)
