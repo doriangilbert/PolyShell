@@ -25,6 +25,7 @@
  *-------------------------------------------------------------------------*/
 
 #include "interactive/bucket.h"
+#include <assert.h>
 
 // #########################################################################
 // #########################################################################
@@ -35,37 +36,74 @@
 
 Bucket* IMPLEMENT(Bucket_new)(void)
 {
-    return provided_Bucket_new();
+    Bucket *b = malloc(sizeof(Bucket));
+	if (b != NULL) {
+		if (Bucket_init(b)) {
+			//erreur init
+			free(b);
+			b = NULL;
+		}
+	}
+	return b;
+	//return provided_Bucket_new();
 }
 
 int IMPLEMENT(Bucket_init)(Bucket *bucket)
 {
-    return provided_Bucket_init(bucket);
+    bucket->top = -1;
+	return 0;
+	//return provided_Bucket_init(bucket);
 }
 
 void IMPLEMENT(Bucket_delete)(Bucket *bucket)
 {
-    provided_Bucket_delete(bucket);
+    if (bucket != NULL) {
+		Bucket_finalize(bucket);
+		free(bucket);
+	}
+	//provided_Bucket_delete(bucket);
 }
 
 void IMPLEMENT(Bucket_finalize)(Bucket *bucket)
 {
-    provided_Bucket_finalize(bucket);
+    (void) bucket; //ne fait rien mais enlève le warning "unused variable"
+	//provided_Bucket_finalize(bucket);
 }
 
 size_t IMPLEMENT(Bucket_size)(const Bucket *bucket)
 {
-    return provided_Bucket_size(bucket);
+	return bucket->top + 1;
+	//return provided_Bucket_size(bucket);
 }
 
 void IMPLEMENT(Bucket_remove)(Bucket *bucket, int position)
 {
-    provided_Bucket_remove(bucket, position);
+	assert(!Bucket_empty(bucket));
+	assert(position >= 0 && position <= bucket->top);
+	for (int i = position ; i < (bucket->top) ; i++) {
+		bucket->content[i] = bucket->content[i+1];
+	}
+	bucket->top = (bucket->top) - 1;
+	/* Correction prof :
+	while(position<bucket->top) {
+		bucket->content[position]=bucket->content[position+1];
+		position++;
+	}
+	(bucket->top)--;
+	*/
+	//provided_Bucket_remove(bucket, position);
 }
 
 void IMPLEMENT(Bucket_insert)(Bucket *bucket, int position, char c)
 {
-    provided_Bucket_insert(bucket, position, c);
+	/*if (position==bucket->top +1){
+		bucket->content[position]=c;
+	}
+	for (int i=position;i<=(bucket->top);i++){
+		bucket->content[i+1]=bucket->content[i];
+	}
+	bucket->content[position]=c;*/
+	provided_Bucket_insert(bucket, position, c);
 }
 
 void IMPLEMENT(Bucket_move)(Bucket *from, int position, Bucket *to)
@@ -75,10 +113,12 @@ void IMPLEMENT(Bucket_move)(Bucket *from, int position, Bucket *to)
 
 int IMPLEMENT(Bucket_empty)(const Bucket *bucket)
 {
-    return provided_Bucket_empty(bucket);
+    return bucket->top == -1;
+	//return provided_Bucket_empty(bucket);
 }
 
 int IMPLEMENT(Bucket_full)(const Bucket *bucket)
 {
-    return provided_Bucket_full(bucket);
+    return (bucket->top + 1) == BUCKET_SIZE;
+	//return provided_Bucket_full(bucket);
 }
