@@ -82,8 +82,8 @@ void IMPLEMENT(History_finalize)(History *history, const char *filename)
 				char *chaine;
 				while(!Fifo_empty(&history->storage)){
 					chaine=duplicateString(history->storage.storage[history->storage.head]);
-					fprintf(fichier, getProtString(chaine,'#'));
-					fprintf(fichier,"\n");
+					fputs(getProtString(chaine,'#'), fichier);
+					fputs("\n", fichier);
 					Fifo_pop(&history->storage);
 				}
 				fclose(fichier);

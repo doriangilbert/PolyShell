@@ -229,6 +229,7 @@ int IMPLEMENT(Input_load)(Input *input, const char *cmd)
 	//return provided_Input_load(input, cmd);
 }
 
+//Prendre tous les caractères jusqu'à espace
 char* IMPLEMENT(Input_getEditedWord)(const Input *input)
 {
     return provided_Input_getEditedWord(input);
