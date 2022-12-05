@@ -25,6 +25,7 @@
  *-------------------------------------------------------------------------*/
 
 #include "misc/string.h"
+#include "misc/ferror.h"
 
 // #########################################################################
 // #########################################################################
@@ -91,7 +92,14 @@ size_t IMPLEMENT(stringLength)(const char *str)
 
 char* IMPLEMENT(duplicateString)(const char *str)
 {
-    return provided_duplicateString(str);
+    size_t size = stringLength(str) + 1;
+	char *r = malloc(size);
+	if (r == NULL) {
+		return NULL;
+	}
+	copyStringWithLength(r, str, size);
+	return r;
+	//return provided_duplicateString(str);
 }
 
 const char* IMPLEMENT(findFirst)(const char *str, const char *separators)
@@ -168,7 +176,65 @@ int IMPLEMENT(stringCompare)(const char *str1, const char *str2)
 
 const char* IMPLEMENT(indexOfString)(const char *foin, const char *aiguille, int csensitive)
 {
-    return provided_indexOfString(foin, aiguille, csensitive);
+	/*size_t TailleFoin,TailleAiguille;
+	TailleFoin=stringLength(foin);
+	TailleAiguille=stringLength(aiguille);
+	if (TailleFoin<TailleAiguille){
+		return NULL;
+	}
+	size_t k;
+	char foin2[TailleFoin] ,aiguille2[TailleAiguille];
+	if (csensitive==0){
+		for(k=0;k<TailleAiguille;k++){
+			aiguille2[k]=toUpperCase(aiguille[k]);
+		}
+		for(k=0;k<TailleFoin;k++){
+			foin2[k]=toUpperCase(foin[k]);
+		}
+	}
+	else{
+		for(k=0;k<TailleAiguille;k++){
+			aiguille2[k]=aiguille[k];
+		}
+		for(k=0;k<TailleFoin;k++){
+			foin2[k]=foin[k];
+		}
+	}
+	size_t i,j,l;
+	int Booleen;
+	for (i=0;i<=(TailleFoin-TailleAiguille+1);i++){
+		Booleen=1;
+		j=0;
+		while(aiguille2[j]!='\0'||Booleen==1){
+			if (aiguille2[j]!=foin2[i+j]){
+				Booleen=0;
+			}
+			j++;
+		}
+		if (Booleen==1){
+			for (l=0;l<=i;l++){
+				foin++;
+			}
+			return foin;
+		}
+	}
+	return NULL;*/
+	
+	/*size_t TailleFoin,TailleAiguille;
+	TailleFoin=stringLength(foin);
+	TailleAiguille=stringLength(aiguille);
+	if (TailleFoin<TailleAiguille){
+		return NULL;
+	}
+	char *foin2 = foin, *aiguille2 = aiguille;
+	while (*foin2) {
+		if  (*foin2 == *aiguille2) {
+			
+		}
+		foin2++;
+	}
+	*/
+	return provided_indexOfString(foin, aiguille, csensitive);
 }
 
 char* IMPLEMENT(concatenateStrings)(const char *str1, const char *str2, size_t minDestSize)
@@ -178,7 +244,17 @@ char* IMPLEMENT(concatenateStrings)(const char *str1, const char *str2, size_t m
 
 void IMPLEMENT(copyStringWithLength)(char *dest, const char * src, size_t destSize)
 {
-    provided_copyStringWithLength(dest, src, destSize);
+    if (destSize == 0) {
+		fatalError("destSize = 0");
+	}
+	size_t i = 0;
+	while (*src && i < destSize - 1) {
+		dest[i] = *src;
+		src++;
+		i++;
+	}
+	dest[i] = '\0';
+	//provided_copyStringWithLength(dest, src, destSize);
 }
 
 char* IMPLEMENT(mkReverse)(char *str)
@@ -188,7 +264,15 @@ char* IMPLEMENT(mkReverse)(char *str)
 
 const char* IMPLEMENT(startWith)(const char *str, const char *prefix, int csensitive)
 {
-	return provided_startWith(str, prefix, csensitive);
+	while (*prefix) {
+		if ((csensitive != 0 && *prefix != *str)||(csensitive == 0 && toLowerCase(*str) != toLowerCase(*prefix))) {
+			return NULL;
+		}
+		prefix++;
+		str++;
+	}
+	return str;
+	//return provided_startWith(str, prefix, csensitive);
 }
 
 int IMPLEMENT(belongs)(char c, const char *str)
@@ -234,7 +318,8 @@ char* IMPLEMENT(getProtString)(const char *str, char c)
 
 char* IMPLEMENT(getRealString)(const char *str, char c, char **firstNotEscaped)
 {
-    return provided_getRealString(str, c, firstNotEscaped);
+    // *firstNotEscaped = ...
+	return provided_getRealString(str, c, firstNotEscaped);
 }
 
 MAKE_NEW_2(Tokenizer, const char*, const char*)
