@@ -319,6 +319,9 @@ char* IMPLEMENT(getProtString)(const char *str, char c)
 		j++;
 	}
 	char *machaine = malloc((sizeof(char)*(taille))); //MALLOC : NE PAS OUBLIER DE FREE
+	if (!machaine){
+		free(machaine);
+	}
 	j=0;
 	int b=0;
 	while(str[j]!='\0'){

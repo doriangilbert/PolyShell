@@ -27,6 +27,7 @@
 #include "interactive/autocomplete.h"
 #include "misc/filesystem.h"
 #include "misc/string.h"
+#include "system/info.h"
 
 // #########################################################################
 // #########################################################################
@@ -35,7 +36,30 @@
 //A ignorer dans un premier temps
 char* IMPLEMENT(prependHomeDir)(char *str)
 {
-    return provided_prependHomeDir(str);
+    if (str && str[0] == '~')
+	{
+		char *nstr = NULL;
+		//~ or ~/xxx
+		if ( str[1] == '\0' || str[1] == '/')
+		{
+			const char *homedir; 
+			userInformation(NULL, &homedir,NULL);
+			nstr = concatenateStrings(homedir, str+1,0);
+		}
+		// ~~ or ~~/xxx
+		else if ( str[1] == '~' && ( str[2] == '/' || str[2] == '\0') )
+		{
+			nstr = duplicateString(str+1);
+		}
+		// replace str by nstr if necessary and if concatenateStrings ran successfully
+		if(nstr) 
+			{
+				free(str);
+				str = nstr;
+			}
+	}
+	return str;
+	//return provided_prependHomeDir(str);
 }
 
 /* startWith, prefix obtenu avec Input_getEditedWord, nbItems, extend et results sont le réseultat de la fonction
@@ -67,14 +91,14 @@ int IMPLEMENT(autocomplete)(const char *prefix, unsigned int limit, unsigned int
 		const char *elem = FolderIterator_get(&it);
 		if (FolderIterator_isDir(&it)){
 			size_t taille = stringLength(elem) +1;
-			elem = concatenateStrings(elem,"/",taille);
+			elem = concatenateStrings(elem,"/",taille); //MALLOC
 		}
 		const char *suffix=startWith(elem,prefix,1);
 		if (suffix!=NULL){
 			++(*nbItems);
 			Fifo_push(*results,elem);
 			if (*extend  == NULL){
-				*extend=duplicateString(suffix);
+				*extend=duplicateString(suffix); //MALLOC
 			}
 			else{
 				mkCommon(*extend,suffix);
@@ -99,5 +123,5 @@ int IMPLEMENT(autocomplete)(const char *prefix, unsigned int limit, unsigned int
 		}
 	}
 	return 0;
-	//return provided_autocomplete(prefix, limit, nbItems, extend, results);
+	return provided_autocomplete(prefix, limit, nbItems, extend, results);
 }

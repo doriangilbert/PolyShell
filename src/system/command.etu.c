@@ -35,12 +35,25 @@
 
 MAKE_DEL_0(CmdMember)
 
-//A ignorer dans un premier temps
 CmdMember* IMPLEMENT(CmdMember_new)(const char *base)
 {
     // MAKE_NEW is not sufficient here because new variables must
     // be registered using the CmdMember_addLivingCmdMember function.
-    return provided_CmdMember_new(base);
+    
+	CmdMember *nmbr = malloc(sizeof(CmdMember));
+	if (nmbr) {
+		if (CmdMember_init(nmbr, base)) {
+			free(nmbr);
+			return NULL;
+		}
+		if (CmdMember_addLivingCmdMember(nmbr)) {
+			CmdMember_delete(nmbr);
+			return NULL;
+		}
+	}
+	return nmbr;
+	
+	//return provided_CmdMember_new(base);
 }
 
 int IMPLEMENT(CmdMember_init)(CmdMember *mbr, const char *base)

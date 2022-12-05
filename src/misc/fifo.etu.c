@@ -108,6 +108,9 @@ int IMPLEMENT(Fifo_pop)(Fifo *fifo)
 	if (Fifo_empty(fifo)){
 		return 1;
 	}
+	if (&fifo->storage[fifo->head] != NULL && fifo->mode!=AGGREGATE){
+		free(fifo->storage[fifo->head]);
+	}
 	fifo->head = (fifo->head+1) % fifo->capacity;
 	return 0; 
 	//return provided_Fifo_pop(fifo);

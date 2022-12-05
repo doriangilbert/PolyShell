@@ -43,13 +43,25 @@
  *
  */
 #define BODY_NEW(DStructure, ...)                           \
-    return provided_##DStructure##_new(__VA_ARGS__);        \
+    DStructure *obj = malloc(sizeof(DStructure));           \
+	if (obj) 												\	
+		{ 													\
+			if(DStructure##_init(obj,##__VA_ARGS__)) 		\
+			{ 												\
+				free(obj); 									\
+				obj = NULL; 								\
+			} 												\
+		} 													\
+	return obj; 											\
+	//return provided_##DStructure##_new(__VA_ARGS__);      \
 
 /**
  *
  */
 #define BODY_DEL(DStructure,  ptr, ...)                     \
-    provided_##DStructure##_delete(ptr, ##__VA_ARGS__);     \
+    if(ptr) {DStructure##_finalize(ptr, ##__VA_ARGS__); 	\
+		free(ptr);} 										\
+	//provided_##DStructure##_delete(ptr, ##__VA_ARGS__);   \
 
 // -------------------------------------------------------------------------
 // -------------------------------------------------------------------------
