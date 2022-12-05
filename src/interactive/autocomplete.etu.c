@@ -45,7 +45,7 @@ Dès que l'on peut écrire quelque chose pour l'utilisateur on met dans extend s
 Cas simple : On explore le dossier courant de l'utilisateur
 FolderIterator sur le dossier courant (open sur .), on parcours et on regarde les éléments débutant par prefix et on construit extend et results dans la fonction et à la fin on choisira lequel retourner 
 
-La fonction est noté en fonction de niveaux à valider via les tests unitaires, pas grave de laisser des tests unitaires qui ne marchent pas sur cette fonction
+La fonction est notée en fonction de niveaux à valider via les tests unitaires, pas grave de laisser des tests unitaires qui ne marchent pas sur cette fonction
 Ne pas laisser vide : Haute pondération
 Niveaux 1 à 4 : OK
 Niveau 5 : Plus compliqué */
