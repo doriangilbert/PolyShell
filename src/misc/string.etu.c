@@ -32,17 +32,59 @@
 
 char IMPLEMENT(toLowerCase)(char c)
 {
-    return provided_toLowerCase(c);
+	if (c >= 'A' && c <='Z') { //Si c fait partie de l'alphabet majuscule
+		c = (char)(c - 'A' + 'a'); //On retire l'écart entre les majuscules et minuscules dans la table ASCII
+	}
+	return c;
+    /*switch (c) {
+		case 'A' : return 'a'; break;
+		case 'B' : return 'b'; break;
+		case 'C' : return 'c'; break;
+		case 'D' : return 'd'; break;
+		case 'E' : return 'e'; break;
+		case 'F' : return 'f'; break;
+		case 'G' : return 'g'; break;
+		case 'H' : return 'h'; break;
+		case 'I' : return 'i'; break;
+		case 'J' : return 'j'; break;
+		case 'K' : return 'k'; break;
+		case 'L' : return 'l'; break;
+		case 'M' : return 'm'; break;
+		case 'N' : return 'n'; break;
+		case 'O' : return 'o'; break;
+		case 'P' : return 'p'; break;
+		case 'Q' : return 'q'; break;
+		case 'R' : return 'r'; break;
+		case 'S' : return 's'; break;
+		case 'T' : return 't'; break;
+		case 'U' : return 'u'; break;
+		case 'V' : return 'v'; break;
+		case 'W' : return 'w'; break;
+		case 'X' : return 'x'; break;
+		case 'Y' : return 'y'; break;
+		case 'Z' : return 'z'; break;
+		default : return c;
+	};*/
+	//return provided_toLowerCase(c);
 }
 
 char IMPLEMENT(toUpperCase)(char c)
 {
-    return provided_toUpperCase(c);
+	if (c >= 'a' && c <='z') { //Si c fait partie de l'alphabet minuscule
+		c = (char)(c + 'A' - 'a'); //On ajoute l'écart entre les majuscules et minuscules dans la table ASCII
+	}
+	return c;		
+    //return provided_toUpperCase(c);
 }
 
 size_t IMPLEMENT(stringLength)(const char *str)
 {
-    return provided_stringLength(str);
+	int i = 0;
+	while (str[i] != '\0') { //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
+		i++; //On incrémente le compteur i de 1
+	}
+	return i;
+    //return provided_stringLength(str);
 }
 
 char* IMPLEMENT(duplicateString)(const char *str)
@@ -62,7 +104,21 @@ char* IMPLEMENT(findLast)(char *str, char c)
 
 int IMPLEMENT(stringCompare)(const char *str1, const char *str2)
 {
-    return provided_stringCompare(str1, str2);
+	/*int i = 0;
+	while (str1[i] != '\0' || str2[i] != '\0') {
+		if (str1[i] != str2[i]) {
+			if (str1[i] < str2[i]) {
+				return -1;
+			}
+			else if (str1[i] > str2[i]) {
+				return 1;
+			}
+		}
+	}*/
+	/*return -1;
+	return 0;
+	return 1;*/
+	//return provided_stringCompare(str1, str2);
 }
 
 const char* IMPLEMENT(indexOfString)(const char *foin, const char *aiguille, int csensitive)
