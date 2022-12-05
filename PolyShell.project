@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Project Name="PolyShell" Version="11000" InternalType="">
+  <VirtualDirectory Name="test">
+    <VirtualDirectory Name="tools">
+      <VirtualDirectory Name="dataset">
+        <File Name="test/tools/dataset/dataset.h"/>
+        <File Name="test/tools/dataset/impl.c"/>
+      </VirtualDirectory>
+      <File Name="test/tools/macros.h"/>
+      <File Name="test/tools/test.c"/>
+      <VirtualDirectory Name="path">
+        <File Name="test/tools/path/mask.h"/>
+        <File Name="test/tools/path/impl.c"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="interactive">
+      <File Name="test/interactive/history.c"/>
+      <File Name="test/interactive/input.c"/>
+      <File Name="test/interactive/cell.c"/>
+      <File Name="test/interactive/bucket.c"/>
+      <File Name="test/interactive/autocomplete.c"/>
+      <File Name="test/interactive/suite.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="system">
+      <File Name="test/system/info.c"/>
+      <File Name="test/system/suite.c"/>
+      <File Name="test/system/command.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="misc">
+      <File Name="test/misc/filesystem.c"/>
+      <File Name="test/misc/string.c"/>
+      <File Name="test/misc/regex.c"/>
+      <File Name="test/misc/fifo.c"/>
+      <File Name="test/misc/suite.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="parser">
+      <File Name="test/parser/parser.c"/>
+      <File Name="test/parser/suite.c"/>
+    </VirtualDirectory>
+    <File Name="test/test.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="src">
+    <VirtualDirectory Name="interactive">
+      <File Name="src/interactive/bucket.etu.c"/>
+      <File Name="src/interactive/header.c"/>
+      <File Name="src/interactive/autocomplete.etu.c"/>
+      <File Name="src/interactive/input.c"/>
+      <File Name="src/interactive/cell.etu.c"/>
+      <File Name="src/interactive/terminal.c"/>
+      <File Name="src/interactive/history.etu.c"/>
+      <File Name="src/interactive/input.etu.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="system">
+      <File Name="src/system/info.etu.c"/>
+      <File Name="src/system/command.c"/>
+      <File Name="src/system/command.etu.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="misc">
+      <File Name="src/misc/regex.etu.c"/>
+      <File Name="src/misc/config.c"/>
+      <File Name="src/misc/string.etu.c"/>
+      <File Name="src/misc/fifo.etu.c"/>
+      <File Name="src/misc/filesystem.etu.c"/>
+      <File Name="src/misc/ferror.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="parser">
+      <File Name="src/parser/parser_b.etu.h"/>
+      <File Name="src/parser/parser_b.etu.c"/>
+      <File Name="src/parser/parser.etu.c"/>
+      <File Name="src/parser/parser_f.etu.c"/>
+    </VirtualDirectory>
+    <File Name="src/main.c"/>
+    <File Name="src/main.etu.c"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="include">
+    <VirtualDirectory Name="parser">
+      <VirtualDirectory Name="impl">
+        <File Name="include/parser/impl/parser.h"/>
+      </VirtualDirectory>
+      <File Name="include/parser/parser.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="misc">
+      <File Name="include/misc/new.etu.h"/>
+      <File Name="include/misc/new.h"/>
+      <VirtualDirectory Name="impl">
+        <File Name="include/misc/impl/fifo.h"/>
+        <File Name="include/misc/impl/filesystem.h"/>
+        <File Name="include/misc/impl/string.h"/>
+        <File Name="include/misc/impl/pattern.h"/>
+      </VirtualDirectory>
+      <File Name="include/misc/registry.h"/>
+      <File Name="include/misc/config.h"/>
+      <File Name="include/misc/fifo.h"/>
+      <File Name="include/misc/filesystem.h"/>
+      <File Name="include/misc/overridable.h"/>
+      <File Name="include/misc/all.h"/>
+      <File Name="include/misc/string.h"/>
+      <File Name="include/misc/ferror.h"/>
+      <File Name="include/misc/pattern.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="system">
+      <VirtualDirectory Name="impl">
+        <File Name="include/system/impl/command.h"/>
+        <File Name="include/system/impl/info.h"/>
+      </VirtualDirectory>
+      <File Name="include/system/command.h"/>
+      <File Name="include/system/info.h"/>
+      <File Name="include/system/all.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="interactive">
+      <VirtualDirectory Name="impl">
+        <File Name="include/interactive/impl/autocomplete.h"/>
+        <File Name="include/interactive/impl/history.h"/>
+        <File Name="include/interactive/impl/bucket.h"/>
+        <File Name="include/interactive/impl/input.h"/>
+        <File Name="include/interactive/impl/cell.h"/>
+      </VirtualDirectory>
+      <File Name="include/interactive/autocomplete.h"/>
+      <File Name="include/interactive/history.h"/>
+      <File Name="include/interactive/bucket.h"/>
+      <File Name="include/interactive/input.h"/>
+      <File Name="include/interactive/header.h"/>
+      <File Name="include/interactive/cell.h"/>
+      <File Name="include/interactive/all.h"/>
+      <File Name="include/interactive/terminal.h"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <Description/>
+  <Dependencies/>
+  <Settings Type="Executable">
+    <GlobalSettings>
+      <Compiler Options="" C_Options="" Assembler="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+    <Configuration Name="debug" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="" IntermediateDirectory="$(WorkspacePath)/bin/debug" Command="$(IntermediateDirectory)/$(ProjectName)" CommandArguments="--banner --verbose --unit-tests --unsecured-tests" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="yes">
+        <RebuildCommand>make TARGET='debug' rebuild</RebuildCommand>
+        <CleanCommand>make TARGET='debug' mrproper</CleanCommand>
+        <BuildCommand>make TARGET='debug' build</BuildCommand>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory>$(WorkspacePath)</WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="release" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="" IntermediateDirectory="$(WorkspacePath)/bin/release" Command="$(IntermediateDirectory)/$(ProjectName)" CommandArguments="--banner" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="yes">
+        <RebuildCommand>make TARGET='release' rebuild</RebuildCommand>
+        <CleanCommand>make TARGET='release' mrproper</CleanCommand>
+        <BuildCommand>make TARGET='release' build</BuildCommand>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory>$(WorkspacePath)</WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+  </Settings>
+</CodeLite_Project>

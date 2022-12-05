@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="PolyShell" />
+		<Option makefile_is_custom="1" />
+		<Option compiler="gcc" />
+		<MakeCommands>
+			<Build command="" />
+			<CompileFile command="" />
+			<Clean command="" />
+			<DistClean command="" />
+			<AskRebuildNeeded command="" />
+			<SilentBuild command="" />
+		</MakeCommands>
+		<Build>
+			<Target title="debug">
+				<Option output="bin/debug/PolyShell" prefix_auto="0" extension_auto="0" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="--banner --verbose --unit-tests --unsecured-tests" />
+				<MakeCommands>
+					<Build command="$make -f $makefile TARGET=&apos;debug&apos; build" />
+					<CompileFile command="" />
+					<Clean command="$make -f $makefile TARGET=&apos;debug&apos; mrproper" />
+					<DistClean command="" />
+					<AskRebuildNeeded command="$make -q -f $makefile TARGET=&apos;debug&apos; build" />
+					<SilentBuild command="" />
+				</MakeCommands>
+			</Target>
+			<Target title="release">
+				<Option output="bin/release/PolyShell" prefix_auto="0" extension_auto="0" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="--banner" />
+				<MakeCommands>
+					<Build command="$make -f $makefile TARGET=&apos;release&apos; build" />
+					<CompileFile command="" />
+					<Clean command="$make -f $makefile TARGET=&apos;release&apos; mrproper" />
+					<DistClean command="" />
+					<AskRebuildNeeded command="$make -q -f $makefile TARGET=&apos;release&apos; build" />
+					<SilentBuild command="" />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="include/interactive/all.h" />
+		<Unit filename="include/interactive/autocomplete.h" />
+		<Unit filename="include/interactive/bucket.h" />
+		<Unit filename="include/interactive/cell.h" />
+		<Unit filename="include/interactive/header.h" />
+		<Unit filename="include/interactive/history.h" />
+		<Unit filename="include/interactive/impl/autocomplete.h" />
+		<Unit filename="include/interactive/impl/bucket.h" />
+		<Unit filename="include/interactive/impl/cell.h" />
+		<Unit filename="include/interactive/impl/history.h" />
+		<Unit filename="include/interactive/impl/input.h" />
+		<Unit filename="include/interactive/input.h" />
+		<Unit filename="include/interactive/terminal.h" />
+		<Unit filename="include/misc/all.h" />
+		<Unit filename="include/misc/config.h" />
+		<Unit filename="include/misc/ferror.h" />
+		<Unit filename="include/misc/fifo.h" />
+		<Unit filename="include/misc/filesystem.h" />
+		<Unit filename="include/misc/impl/fifo.h" />
+		<Unit filename="include/misc/impl/filesystem.h" />
+		<Unit filename="include/misc/impl/pattern.h" />
+		<Unit filename="include/misc/impl/string.h" />
+		<Unit filename="include/misc/new.etu.h" />
+		<Unit filename="include/misc/new.h" />
+		<Unit filename="include/misc/overridable.h" />
+		<Unit filename="include/misc/pattern.h" />
+		<Unit filename="include/misc/registry.h" />
+		<Unit filename="include/misc/string.h" />
+		<Unit filename="include/parser/impl/parser.h" />
+		<Unit filename="include/parser/parser.h" />
+		<Unit filename="include/system/all.h" />
+		<Unit filename="include/system/command.h" />
+		<Unit filename="include/system/impl/command.h" />
+		<Unit filename="include/system/impl/info.h" />
+		<Unit filename="include/system/info.h" />
+		<Unit filename="src/interactive/autocomplete.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/interactive/bucket.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/interactive/cell.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/interactive/header.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/interactive/history.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/interactive/input.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/interactive/input.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/interactive/terminal.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/main.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/misc/config.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/misc/ferror.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/misc/fifo.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/misc/filesystem.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/misc/regex.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/misc/string.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/parser/parser.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/parser/parser_b.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/parser/parser_b.etu.h" />
+		<Unit filename="src/parser/parser_f.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/system/command.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/system/command.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/system/info.etu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/interactive/autocomplete.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/interactive/bucket.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/interactive/cell.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/interactive/history.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/interactive/input.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/interactive/suite.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/misc/fifo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/misc/filesystem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/misc/regex.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/misc/string.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/misc/suite.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/parser/parser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/parser/suite.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/system/command.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/system/info.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/system/suite.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/test.h" />
+		<Unit filename="test/tools/dataset/dataset.h" />
+		<Unit filename="test/tools/dataset/impl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/tools/macros.h" />
+		<Unit filename="test/tools/path/impl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/tools/path/mask.h" />
+		<Unit filename="test/tools/test.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

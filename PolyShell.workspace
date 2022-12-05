@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Workspace Name="PolyShell" Database="" Version="10.0.0">
+  <Project Name="PolyShell" Path="PolyShell.project" Active="Yes"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="release" Selected="no">
+      <Environment/>
+      <Project Name="PolyShell" ConfigName="release"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="debug" Selected="yes">
+      <Environment/>
+      <Project Name="PolyShell" ConfigName="debug"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>

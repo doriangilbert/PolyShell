@@ -1,0 +1,4 @@
+# Ignore following directories
+backup/
+.codelite/
+.vscode/
