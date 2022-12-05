@@ -36,7 +36,7 @@
 
 Bucket* IMPLEMENT(Bucket_new)(void)
 {
-    Bucket *b = malloc(sizeof(Bucket));
+    Bucket *b = malloc(sizeof(Bucket)); //MALLOC : NE PAS OUBLIER DE FREE
 	if (b != NULL) {
 		if (Bucket_init(b)) {
 			//erreur init
@@ -59,7 +59,7 @@ void IMPLEMENT(Bucket_delete)(Bucket *bucket)
 {
     if (bucket != NULL) {
 		Bucket_finalize(bucket);
-		free(bucket);
+		free(bucket); //FREE
 	}
 	//provided_Bucket_delete(bucket);
 }

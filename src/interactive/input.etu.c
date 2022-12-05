@@ -195,7 +195,14 @@ char* IMPLEMENT(Input_toString)(const Input *input)
 
 void IMPLEMENT(InputIterator_initIterator)(const Input *input, InputIterator *inputIterator)
 {
-    provided_InputIterator_initIterator(input, inputIterator);
+	//TODO : Gérer le cas où input est vide
+    /*inputIterator->pos = 0;
+	inputIterator->current = input->current;
+	while (inputIterator->current->previous != NULL) {
+		inputIterator->current = inputIterator->current->previous;
+	}
+	*/
+	provided_InputIterator_initIterator(input, inputIterator);
 }
 
 int IMPLEMENT(InputIterator_equals)(const InputIterator *x, const InputIterator *other)
@@ -205,17 +212,20 @@ int IMPLEMENT(InputIterator_equals)(const InputIterator *x, const InputIterator 
 
 int IMPLEMENT(InputIterator_isOver)(const InputIterator *inputIterator)
 {
-    return provided_InputIterator_isOver(inputIterator);
+    //à top+1 (après le dernier caractere)
+	return provided_InputIterator_isOver(inputIterator);
 }
 
 void IMPLEMENT(InputIterator_next)(InputIterator *inputIterator)
 {
-    provided_InputIterator_next(inputIterator);
+    Input_moveRight(inputIterator);
+	//provided_InputIterator_next(inputIterator);
 }
 
 char IMPLEMENT(InputIterator_get)(const InputIterator *inputIterator)
 {
-    return provided_InputIterator_get(inputIterator);
+    return Input_get(inputIterator);
+	//return provided_InputIterator_get(inputIterator);
 }
 
 int IMPLEMENT(Input_load)(Input *input, const char *cmd)

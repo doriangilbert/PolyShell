@@ -93,7 +93,7 @@ size_t IMPLEMENT(stringLength)(const char *str)
 char* IMPLEMENT(duplicateString)(const char *str)
 {
     size_t size = stringLength(str) + 1;
-	char *r = malloc(size);
+	char *r = malloc(size); //MALLOC : NE PAS OUBLIER DE FREE
 	if (r == NULL) {
 		return NULL;
 	}
