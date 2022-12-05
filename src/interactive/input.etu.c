@@ -35,12 +35,16 @@ MAKE_DEL_0(Input)
 
 int IMPLEMENT(Input_init)(Input *input)
 {
-    return provided_Input_init(input);
+    input->current = NULL;
+	input->pos = 0;
+	return 0;
+	//return provided_Input_init(input);
 }
 
 void IMPLEMENT(Input_finalize)(Input *input)
 {
-    provided_Input_finalize(input);
+    Input_clear(input);
+	//provided_Input_finalize(input);
 }
 
 void IMPLEMENT(Input_clear)(Input *input)
@@ -50,12 +54,30 @@ void IMPLEMENT(Input_clear)(Input *input)
 
 size_t IMPLEMENT(Input_size)(const Input *input)
 {
-    return provided_Input_size(input);
+	size_t s = 0;
+	if (input->current) {
+		for(Cell *c = input->current ; c != NULL ; c = c->next) {
+			s += Bucket_size(&c->bucket);
+		}
+		for(Cell *c = input->current->previous ; c != NULL ; c = c->previous) {
+			s += Bucket_size(&c->bucket);
+		}
+	}
+	return s;
+	//return provided_Input_size(input);
 }
 
 char IMPLEMENT(Input_get)(const Input *input)
 {
-    return provided_Input_get(input);
+    /*if (input->current!=NULL){
+		if (input->current->bucket!=NULL){
+			if (input->current->bucket->content[input->pos]!=""){
+				return input->current->bucket[input->pos];
+			}
+		}
+	}
+	return '\0';*/
+	return provided_Input_get(input);
 }
 
 int IMPLEMENT(Input_insert)(Input *input, char c)

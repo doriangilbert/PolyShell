@@ -99,10 +99,15 @@ void IMPLEMENT(Bucket_insert)(Bucket *bucket, int position, char c)
 	/*if (position==bucket->top +1){
 		bucket->content[position]=c;
 	}
-	for (int i=position;i<=(bucket->top);i++){
-		bucket->content[i+1]=bucket->content[i];
+	else {
+		char temp=bucket->content[position];
+		for (int i=position+1;i<=(bucket->top)+1;i++){
+			bucket->content[i]=temp;
+			temp=bucket->content[i+1];
+		}
+		bucket->content[position]=c;
 	}
-	bucket->content[position]=c;*/
+	bucket->top=bucket->top+1;*/
 	provided_Bucket_insert(bucket, position, c);
 }
 

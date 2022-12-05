@@ -35,15 +35,36 @@ MAKE_DEL_0(Cell)
 
 int IMPLEMENT(Cell_init)(Cell *cell)
 {
-    return provided_Cell_init(cell);
+	cell->next = cell->previous = NULL;
+	if (Bucket_init(&cell->bucket)) {
+		return 1;
+	}
+	return 0;
+    //return provided_Cell_init(cell);
 }
-
+	
 void IMPLEMENT(Cell_finalize)(Cell *cell)
 {
-    provided_Cell_finalize(cell);
+    Bucket_finalize(&cell->bucket);
+	//provided_Cell_finalize(cell);
 }
 
 void IMPLEMENT(Cell_insertAfter)(Cell *cell, Cell *newCell)
 {
-    provided_Cell_insertAfter(cell, newCell);
+    newCell->next = (cell->next);
+	newCell->previous = cell;
+	if (newCell->next != NULL) {
+		(newCell->next)->previous = newCell;
+	}
+	cell->next=newCell;
+	
+	/*Correction Prof :
+	newCell->previous=cell;
+	newCell->next=cell->next;
+	if (cell->next) {
+		cell->next->previous=newCell;
+	}
+	cell->next=newCell;*/
+	
+	//provided_Cell_insertAfter(cell, newCell);
 }
