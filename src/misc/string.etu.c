@@ -36,6 +36,7 @@ char IMPLEMENT(toLowerCase)(char c)
 		c = (char)(c - 'A' + 'a'); //On retire l'écart entre les majuscules et minuscules dans la table ASCII
 	}
 	return c;
+	
     /*switch (c) {
 		case 'A' : return 'a'; break;
 		case 'B' : return 'b'; break;
@@ -65,6 +66,7 @@ char IMPLEMENT(toLowerCase)(char c)
 		case 'Z' : return 'z'; break;
 		default : return c;
 	};*/
+	
 	//return provided_toLowerCase(c);
 }
 
@@ -79,7 +81,7 @@ char IMPLEMENT(toUpperCase)(char c)
 
 size_t IMPLEMENT(stringLength)(const char *str)
 {
-	int i = 0;
+	size_t i = 0;
 	while (str[i] != '\0') { //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
 		i++; //On incrémente le compteur i de 1
 	}
@@ -94,30 +96,73 @@ char* IMPLEMENT(duplicateString)(const char *str)
 
 const char* IMPLEMENT(findFirst)(const char *str, const char *separators)
 {
-    return provided_findFirst(str, separators);
+    int i = 0; //Initialisation de la variable de boucle i
+	const char* ptChar = NULL; //Initialisation du pointeur constant ptChar vers un char à NULL
+	while (str[i] != '\0') { //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
+		int j = 0; //Initialisation de la variable de boucle j
+		while (separators[j] != '\0') {  //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
+			if (str[i] == separators[j]) { //Si le caractère courant est dans separators
+				ptChar = &str[i]; //Faire pointer ptChar sur le caractère courant
+				return ptChar; //Retourner le pointeur ptChar
+			}
+			j++; //On incrémente le compteur j de 1
+		}
+		i++; //On incrémente le compteur i de 1
+	}
+	return ptChar; //Retourner le pointeur ptChar
+	
+	/* Correction prof :
+	size_t len_sep = stringLength(separators);
+	while (*str != '\0') {
+		for (size_t i = 0; i < len_sep; ++i) {
+			if (*str == separators[i]) {
+				return str;
+			}
+		}
+		++str;
+	}
+	return 0; */
+	
+	//return provided_findFirst(str, separators);
 }
 
 char* IMPLEMENT(findLast)(char *str, char c)
 {
-    return provided_findLast(str, c);
+    int i = 0; //Initialisation de la variable de boucle i
+	char* ptChar = NULL; //Initialisation du pointeur ptChar vers un char à NULL
+	while (str[i] != '\0') { //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
+		if (str[i] == c) { //Si le caractère courant est égal à c
+			ptChar = &str[i]; //Faire pointer ptChar sur le caractère courant
+		}
+		i++; //On incrémente le compteur i de 1
+	}
+	return ptChar;
+	//return provided_findLast(str, c);
 }
 
 int IMPLEMENT(stringCompare)(const char *str1, const char *str2)
 {
-	/*int i = 0;
-	while (str1[i] != '\0' || str2[i] != '\0') {
-		if (str1[i] != str2[i]) {
+	int i = 0; //Initialisation de la variable de boucle i
+	while (str1[i] != '\0' || str2[i] != '\0') { //Tant que l'on n'est pas arrivé au bout des deux chaines
+		if (str1[i] != str2[i]) { //Si les caractères à une position i sont différents
 			if (str1[i] < str2[i]) {
-				return -1;
+				return -1; //Retourner -1 si le caratère de str1 est plus petit que celui de str2
 			}
 			else if (str1[i] > str2[i]) {
-				return 1;
+				return 1; //Retourner 1 si le caratère de str1 est plus grand que celui de str2
 			}
 		}
-	}*/
-	/*return -1;
-	return 0;
-	return 1;*/
+		i++; //Incrément de la variable de boucle i
+	}
+	return 0; // Retourner 0 si les chaines sont égales
+	
+	/* Correction prof :
+	while(*str1 != '\0' && *str1 == *str2) {
+		++str1;
+		++str2;
+	}
+	return *str1 - *str2; */
+	
 	//return provided_stringCompare(str1, str2);
 }
 
@@ -143,12 +188,20 @@ char* IMPLEMENT(mkReverse)(char *str)
 
 const char* IMPLEMENT(startWith)(const char *str, const char *prefix, int csensitive)
 {
-    return provided_startWith(str, prefix, csensitive);
+	return provided_startWith(str, prefix, csensitive);
 }
 
 int IMPLEMENT(belongs)(char c, const char *str)
 {
-    return provided_belongs(c, str);
+	int i = 0; //Initialisation de la variable de boucle i
+	while (str[i] != '\0') { //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
+		if (str[i] == c) { //Si le caractère courant est égal à c
+			return 1;
+		}
+		i++; //Incrément de la variable de boucle i
+	}
+	return 0;
+	//return provided_belongs(c, str);
 }
 
 char* IMPLEMENT(subString)(const char *start, size_t length)
@@ -163,7 +216,15 @@ void IMPLEMENT(mkCommon)(char *result, const char *str)
 
 int IMPLEMENT(isNotEmpty)(const char *str)
 {
-    return provided_isNotEmpty(str);
+    int i = 0; //Initialisation de la variable de boucle i
+	while (str[i] != '\0') { //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
+		if(str[i] != ' ') { //Si le caractère courant n'est pas un espace
+			return 1;
+		}
+		i++; //Incrément de la variable de boucle i
+	}
+	return 0;
+	//return provided_isNotEmpty(str);
 }
 
 char* IMPLEMENT(getProtString)(const char *str, char c)
