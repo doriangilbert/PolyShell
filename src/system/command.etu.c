@@ -28,6 +28,12 @@
 #include "misc/string.h"
 #include "interactive/autocomplete.h"
 #include <assert.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 // #########################################################################
 // #########################################################################
@@ -172,7 +178,43 @@ size_t IMPLEMENT(Command_getNbMember)(const Command *cmd)
     return provided_Command_getNbMember(cmd);
 }
 
+/* L'* est deja gérée par le parser (on a deja remplacé)
+Options > pipes > redirections */
+
+
+//Ne compte pas dans la partie Projet Tutoré 1
 int IMPLEMENT(Command_execute)(Command *cmd)
 {
-    return provided_Command_execute(cmd);
+    if (cmd->status)
+	{
+		pid_t pid = fork();
+		switch (pid) {
+			case -1:
+				perror ("fork");
+				return 1;
+			case 0:
+				//Redirection > (sortie std NORMAL)
+				if (cmd->redirectionTypes[1] == NORMAL){
+					int r=open(cmd->redirections[1],O_WRONLY | O_CREAT | O_TRUNC,0644);
+					if (r==-1){
+						perror(" open");
+						exit(1);
+					}
+					close(1);
+					dup(r);
+					close(r);
+				}
+				cmd=CmdMember_addOption(cmd,NULL,0);
+				execvp(cmd->base,cmd->options);
+				perror ("execvp");
+				exit(1);
+			default:
+				wait (NULL);
+		}
+		return 0;
+	}
+	else {
+		return 1;
+	}
+	//return provided_Command_execute(cmd);
 }
