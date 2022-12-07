@@ -25,7 +25,7 @@ CC := gcc
 # =================================================================================
 
 IFLAGS = -Iinclude -Itest
-CFLAGS = -pedantic -Wextra -Wall -std=c99 -D_GNU_SOURCE -Werror -MMD -Werror=format-security
+CFLAGS = -pedantic -Wextra -Wall -std=c99 -D_GNU_SOURCE -Werror -MMD
 LFLAGS = -L${LIBDIR} '-Wl,-rpath,$$ORIGIN/../../${LIBDIR}' -lcheck_pic -pthread -lrt -lm -lsubunit -lprovided -lbsd
 
 RFLAGS = --banner

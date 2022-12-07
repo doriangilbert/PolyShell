@@ -50,7 +50,16 @@ void IMPLEMENT(Input_finalize)(Input *input)
 
 void IMPLEMENT(Input_clear)(Input *input)
 {
-    provided_Input_clear(input);
+    if (input!=NULL && input->current !=NULL){
+		while(input->current->next != NULL){
+			input->current=input->current->next;
+		}
+		while(input->current !=NULL){
+			Cell_finalize(input->current);
+			input->current=input->current->previous;
+		}
+	}
+	//provided_Input_clear(input);
 }
 
 size_t IMPLEMENT(Input_size)(const Input *input)
@@ -118,12 +127,38 @@ int IMPLEMENT(Input_insert)(Input *input, char c)
 
 int IMPLEMENT(Input_backspace)(Input *input)
 {
-    return provided_Input_backspace(input);
+    /*if (input!=NULL && input->current !=NULL && input->pos >=0 && input->pos<=input->current->bucket.top +1)
+	{
+		if (input->pos != 0)
+		{
+			input->pos = input->pos -1;
+			Bucket_remove(&input->current->bucket,input->pos);
+			return 0;
+		}
+		else if (input->current->previous != NULL)
+		{
+			input->current= input->current->previous;
+			input->pos = input->current->bucket.top;
+			Bucket_remove(&input->current->bucket,input->pos);
+			input->pos = input->pos -1;
+			return 0;
+		}
+	}
+	return 1;*/
+
+	return provided_Input_backspace(input);
 }
 
 int IMPLEMENT(Input_del)(Input *input)
 {
-    return provided_Input_del(input);
+    /*if (input!=NULL && input->current !=NULL && input->pos< input->current->bucket.top +1)
+	{
+		Bucket_remove(&input->current->bucket,input->pos);
+		return 0;
+	}
+	return 1;*/
+
+	return provided_Input_del(input);
 }
 
 int IMPLEMENT(Input_moveLeft)(Input *input)
@@ -150,16 +185,27 @@ int IMPLEMENT(Input_moveLeft)(Input *input)
 
 int IMPLEMENT(Input_moveRight)(Input *input)
 {
-	//A FAIRE
-	/*if (input != NULL && input->current!=NULL && !Bucket_empty(&input->current->bucket)){
+
+	if (input != NULL && input->current!=NULL && !Bucket_empty(&input->current->bucket) && input->pos!=input->current->bucket.top+1){
 		if (input->pos==input->current->bucket.top){
 			if (input->current->next!=NULL){
 				input->current=input->current->next;
 				input->pos=0;
 				return 0;
-			}	
+			}
 			else{
-				return 1;
+				if (!Bucket_full(&input->current->bucket)){
+					input->pos++;
+					return 0;
+				}
+				else{
+					input->current->next=Cell_new();
+					input->current->next->previous=input->current;
+					input->current=input->current->next;
+
+					input->pos=0;
+					return 0;
+				}
 			}
 		}
 		else{
@@ -169,8 +215,9 @@ int IMPLEMENT(Input_moveRight)(Input *input)
 	}
 	else{
 		return 1;
-	}*/
-	return provided_Input_moveRight(input);
+	}
+
+	//return provided_Input_moveRight(input);
 }
 
 char* IMPLEMENT(Input_toString)(const Input *input)

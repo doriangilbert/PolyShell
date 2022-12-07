@@ -8,4 +8,5 @@ obj/debug/src/interactive/input.etu.o: src/interactive/input.etu.c \
  include/misc/new.h include/misc/impl/fifo.h \
  include/interactive/impl/autocomplete.h include/interactive/header.h \
  include/interactive/terminal.h include/interactive/history.h \
- include/interactive/impl/history.h
+ include/interactive/impl/history.h include/misc/string.h \
+ include/misc/impl/string.h
