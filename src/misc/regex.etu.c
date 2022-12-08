@@ -30,10 +30,14 @@
 // #########################################################################
 // #########################################################################
 
-MAKE_NEW_1(Pattern, const char*)
+MAKE_NEW_1(Pattern, const char *)
 MAKE_DEL_0(Pattern)
 
-//REGEX EN BONUS
+/*
+Les fonctions Pattern permettent de vérifier si une chaîne de caractères str vérifie ou non un motif pattern donné.
+*/
+
+// REGEX EN BONUS
 
 int IMPLEMENT(Pattern_init)(Pattern *preg, const char *pattern)
 {

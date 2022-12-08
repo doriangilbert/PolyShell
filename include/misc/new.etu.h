@@ -39,9 +39,12 @@
 // LOOK AT new.h FOR MORE DETAILS!
 //
 
-/**
- *
- */
+/*
+#define BODY_NEW(DStructure, ...) :
+
+Implémente de façon générique le comportement attendu d'une fonction new.
+*/
+
 #define BODY_NEW(DStructure, ...)                           \
     DStructure *obj = malloc(sizeof(DStructure));           \
 	if (obj) 												\	
@@ -55,9 +58,12 @@
 	return obj; 											\
 	//return provided_##DStructure##_new(__VA_ARGS__);      \
 
-/**
- *
- */
+/*
+#define BODY_DEL(DStructure,  ptr, ...) :
+
+Implémente de façon générique le comportement attendu d'une fonction delete.
+*/
+
 #define BODY_DEL(DStructure,  ptr, ...)                     \
     if(ptr) {DStructure##_finalize(ptr, ##__VA_ARGS__); 	\
 		free(ptr);} 										\

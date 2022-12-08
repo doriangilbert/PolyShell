@@ -33,41 +33,58 @@
 // #########################################################################
 // #########################################################################
 
-//A ignorer dans un premier temps
-char* IMPLEMENT(prependHomeDir)(char *str)
+/*
+char* prependHomeDir(char *str) :
+
+Etend le chemin str si ce dernier commence par le raccourci “~” (répertoire de l'utilisateur).
+
+1. Le cas échéant, la mémoire allouée à str est libérée et la fonction renvoie une nouvelle chaîne de caractères allouée sur le tas (e.g. “~/.historique” devient “/home/etudiant/.historique”).
+2. Si le caractère spécial “~” est doublé (échappé), la fonction supprime l'une des deux occurrences.
+3. Elle renvoie directement str dans tous les autre cas, y compris si str est NULL.
+*/
+
+char *IMPLEMENT(prependHomeDir)(char *str)
 {
-    if (str && str[0] == '~')
+	if (str && str[0] == '~')
 	{
 		char *nstr = NULL;
 		//~ or ~/xxx
-		if ( str[1] == '\0' || str[1] == '/')
+		if (str[1] == '\0' || str[1] == '/')
 		{
-			const char *homedir; 
-			userInformation(NULL, &homedir,NULL);
-			nstr = concatenateStrings(homedir, str+1,0);
+			const char *homedir;
+			userInformation(NULL, &homedir, NULL);
+			nstr = concatenateStrings(homedir, str + 1, 0);
 		}
 		// ~~ or ~~/xxx
-		else if ( str[1] == '~' && ( str[2] == '/' || str[2] == '\0') )
+		else if (str[1] == '~' && (str[2] == '/' || str[2] == '\0'))
 		{
-			nstr = duplicateString(str+1);
+			nstr = duplicateString(str + 1);
 		}
 		// replace str by nstr if necessary and if concatenateStrings ran successfully
-		if(nstr) 
-			{
-				free(str);
-				str = nstr;
-			}
+		if (nstr)
+		{
+			free(str);
+			str = nstr;
+		}
 	}
 	return str;
-	//return provided_prependHomeDir(str);
+	// return provided_prependHomeDir(str);
 }
+
+/*
+int autocomplete(const char *prefix, unsigned int limit,
+				 // outputs
+				 unsigned int *nbItems, char **extend, Fifo **results) :
+
+La recherche est exhaustive. Le nombre de solutions trouvées est enregistré dans nbItems. Si la solution est unique, le résultat est stocké dans extend. S'il y en a plusieurs, au plus limit propositions sont rangées dans le conteneur results. La fonction retourne 0 en cas de succès ou 1 en cas d'erreur (attention, ne pas trouver de solution n'est pas un motif d'erreur !).
+*/
 
 /* startWith, prefix obtenu avec Input_getEditedWord, nbItems, extend et results sont le réseultat de la fonction
 nbItems, nombre déléments qui matchent avec le prefix, dès qu'on a correspondance on incrémente (utiliser startWith)
-La fonction retourne soit une chaine extend, soit un ensemble de chaine results contenant toutes les suggestions si on ne sait pas, si on sait on met le résultat dans extend 
-Dès que l'on peut écrire quelque chose pour l'utilisateur on met dans extend sinon dans results 
+La fonction retourne soit une chaine extend, soit un ensemble de chaine results contenant toutes les suggestions si on ne sait pas, si on sait on met le résultat dans extend
+Dès que l'on peut écrire quelque chose pour l'utilisateur on met dans extend sinon dans results
 Cas simple : On explore le dossier courant de l'utilisateur
-FolderIterator sur le dossier courant (open sur .), on parcours et on regarde les éléments débutant par prefix et on construit extend et results dans la fonction et à la fin on choisira lequel retourner 
+FolderIterator sur le dossier courant (open sur .), on parcours et on regarde les éléments débutant par prefix et on construit extend et results dans la fonction et à la fin on choisira lequel retourner
 
 La fonction est notée en fonction de niveaux à valider via les tests unitaires, pas grave de laisser des tests unitaires qui ne marchent pas sur cette fonction
 Ne pas laisser vide : Haute pondération
@@ -76,52 +93,63 @@ Niveau 5 : Plus compliqué */
 
 int IMPLEMENT(autocomplete)(const char *prefix, unsigned int limit, unsigned int *nbItems, char **extend, Fifo **results)
 {
-    if (!prefix || !limit || !nbItems || !extend || !results) {
+	if (!prefix || !limit || !nbItems || !extend || !results)
+	{
 		return 1;
 	}
 	*nbItems = 0;
 	*extend = NULL;
-	*results = Fifo_new(limit,COMPOSE); //MALLOC + init
+	*results = Fifo_new(limit, COMPOSE); // MALLOC + init
 	FolderIterator it;
-	if (FolderIterator_init(&it, ".", 1)) {
+	if (FolderIterator_init(&it, ".", 1))
+	{
 		printf("Erreur init!");
 		return 1;
 	}
-	while (!FolderIterator_isOver(&it)) {
+	while (!FolderIterator_isOver(&it))
+	{
 		const char *elem = FolderIterator_get(&it);
-		if (FolderIterator_isDir(&it)){
-			size_t taille = stringLength(elem) +1;
-			elem = concatenateStrings(elem,"/",taille); //MALLOC
+		if (FolderIterator_isDir(&it))
+		{
+			size_t taille = stringLength(elem) + 1;
+			elem = concatenateStrings(elem, "/", taille); // MALLOC
 		}
-		const char *suffix=startWith(elem,prefix,1);
-		if (suffix!=NULL){
+		const char *suffix = startWith(elem, prefix, 1);
+		if (suffix != NULL)
+		{
 			++(*nbItems);
-			Fifo_push(*results,elem);
-			if (*extend  == NULL){
-				*extend=duplicateString(suffix); //MALLOC
+			Fifo_push(*results, elem);
+			if (*extend == NULL)
+			{
+				*extend = duplicateString(suffix); // MALLOC
 			}
-			else{
-				mkCommon(*extend,suffix);
+			else
+			{
+				mkCommon(*extend, suffix);
 			}
 		}
 		FolderIterator_next(&it);
 	}
-	FolderIterator_finalize(&it);	
-	
-	//Se baser sur nbItems aide mais ne suffit pas dans certains cas pour trancher
-	if (*nbItems<1){
+	FolderIterator_finalize(&it);
+
+	// Se baser sur nbItems aide mais ne suffit pas dans certains cas pour trancher
+	if (*nbItems < 1)
+	{
 		Fifo_finalize(*results);
-		*results=NULL;
-	}	
-	else{
-		if(stringLength(*extend)!=0){
+		*results = NULL;
+	}
+	else
+	{
+		if (stringLength(*extend) != 0)
+		{
 			Fifo_finalize(*results);
-			*results=NULL;
+			*results = NULL;
 		}
-		else{
-			*extend=NULL;
+		else
+		{
+			*extend = NULL;
 		}
 	}
 	return 0;
-	return provided_autocomplete(prefix, limit, nbItems, extend, results);
+	// return provided_autocomplete(prefix, limit, nbItems, extend, results);
 }

@@ -2,5 +2,6 @@
 backup/
 .codelite/
 .vscode/
+.clang/
 *.o
 *.d
