@@ -140,7 +140,8 @@ int IMPLEMENT(Input_backspace)(Input *input)
 			input->current= input->current->previous;
 			input->pos = input->current->bucket.top;
 			Bucket_remove(&input->current->bucket,input->pos);
-			input->pos = input->pos -1;
+			input->current=input->current->next;
+			input->pos=0;
 			return 0;
 		}
 	}
@@ -222,7 +223,17 @@ int IMPLEMENT(Input_moveRight)(Input *input)
 
 char* IMPLEMENT(Input_toString)(const Input *input)
 {
-    return provided_Input_toString(input);
+	InputIterator it;
+	size_t l=Input_size(input);
+	char* chaine=malloc(sizeof(char*)*l+1);
+	int i=0;
+	for (InputIterator_initIterator(input,&it) ; !InputIterator_isOver(&it) ; InputIterator_next(&it)) {
+		chaine[i]=InputIterator_get(&it);
+		i++;
+	}
+	chaine[i]='\0';
+	return chaine;
+	//return provided_Input_toString(input);
 }
 
 /* POUR TESTER : (typedef Input InputIterator)
@@ -235,18 +246,23 @@ char* IMPLEMENT(Input_toString)(const Input *input)
 void IMPLEMENT(InputIterator_initIterator)(const Input *input, InputIterator *inputIterator)
 {
 	//TODO : Gérer le cas où input est vide
-    /*inputIterator->pos = 0;
-	inputIterator->current = input->current;
-	while (inputIterator->current->previous != NULL) {
-		inputIterator->current = inputIterator->current->previous;
+    if (input!=NULL && input->current!=NULL){
+		inputIterator->pos = 0;
+		inputIterator->current = input->current;
+		while (inputIterator->current->previous != NULL) {
+			inputIterator->current = inputIterator->current->previous;
+		}
 	}
-	*/
 	provided_InputIterator_initIterator(input, inputIterator);
 }
 
 int IMPLEMENT(InputIterator_equals)(const InputIterator *x, const InputIterator *other)
 {
-    return provided_InputIterator_equals(x, other);
+    if(&x->current->bucket.content[x->pos] == &other->current->bucket.content[other->pos]){
+		return 1;
+	}
+	return 0;
+	//return provided_InputIterator_equals(x, other);
 }
 
 int IMPLEMENT(InputIterator_isOver)(const InputIterator *inputIterator)
@@ -279,5 +295,6 @@ int IMPLEMENT(Input_load)(Input *input, const char *cmd)
 //Prendre tous les caractères jusqu'à espace
 char* IMPLEMENT(Input_getEditedWord)(const Input *input)
 {
-    return provided_Input_getEditedWord(input);
+
+	return provided_Input_getEditedWord(input);
 }
