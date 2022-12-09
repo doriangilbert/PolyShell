@@ -257,7 +257,119 @@ Options > pipes > redirections */
 // Ne compte pas dans la partie Projet Tutoré 1
 int IMPLEMENT(Command_execute)(Command *cmd)
 {
-	if (cmd->status)
+	size_t nbM = Command_getNbMember(cmd);
+	int pipeG[2] = {-1, -1};
+	int pipeD[2] = {-1, -1};
+	while (cmd)
+	{
+		if (cmd->next != NULL)
+		{
+			pipe(pipeD);
+		}
+		pid_t pid = fork();
+		if (pid == -1)
+		{
+			perror("fork");
+			return 1;
+		}
+		else if (pid == 0)
+		{
+			if (cmd->prev != NULL)
+			{
+				close(0);
+				dup(pipeG[0]);
+				close(pipeG[0]);
+				close(pipeG[1]);
+			}
+			// Redirection de l'entrée standard
+			else if (cmd->redirectionTypes[0] != UNDEFINED)
+			{
+				int r;
+				// Redirection < (entrée std NORMAL)
+				if (cmd->redirectionTypes[0] == NORMAL)
+				{
+					r = open(cmd->redirections[0], O_RDONLY, 0644);
+				}
+				if (r == -1)
+				{
+					perror(" open");
+					exit(1);
+				}
+				close(0);
+				dup(r);
+				close(r);
+			}
+			if (cmd->next != NULL)
+			{
+				close(1);
+				dup(pipeD[1]);
+				close(pipeD[1]);
+				close(pipeD[0]);
+			}
+			// Redirection de la sortie standard
+			else if (cmd->redirectionTypes[1] != UNDEFINED)
+			{
+				int r;
+				// Redirection > (sortie std NORMAL)
+				if (cmd->redirectionTypes[1] == NORMAL)
+				{
+					r = open(cmd->redirections[1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				}
+				// Redirection >> (sortie std APPEND)
+				if (cmd->redirectionTypes[1] == APPEND)
+				{
+					r = open(cmd->redirections[1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+				}
+				if (r == -1)
+				{
+					perror(" open");
+					exit(1);
+				}
+				close(1);
+				dup(r);
+				close(r);
+			}
+			// Redirection de la sortie standard d'erreur
+			if (cmd->redirectionTypes[2] != UNDEFINED)
+			{
+				int r;
+				// Redirection > (sortie std d'erreur NORMAL)
+				if (cmd->redirectionTypes[2] == NORMAL)
+				{
+					r = open(cmd->redirections[2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				}
+				// Redirection >> (sortie std d'erreur APPEND)
+				if (cmd->redirectionTypes[2] == APPEND)
+				{
+					r = open(cmd->redirections[2], O_WRONLY | O_CREAT | O_APPEND, 0644);
+				}
+				if (r == -1)
+				{
+					perror(" open");
+					exit(1);
+				}
+				close(2);
+				dup(r);
+				close(r);
+			}
+			cmd = CmdMember_addOption(cmd, NULL, 0);
+			execvp(cmd->base, cmd->options);
+			perror("execvp");
+			exit(1);
+		}
+		close(pipeG[0]);
+		close(pipeG[1]);
+		pipeD[0] = pipeG[0];
+		pipeD[1] = pipeG[1];
+		cmd = cmd->next;
+	}
+	for (size_t i = 1; i <= nbM; i++)
+	{
+		wait(NULL);
+	}
+	return 0;
+
+	/* if (cmd->status)
 	{
 		pid_t pid = fork();
 		switch (pid)
@@ -291,6 +403,6 @@ int IMPLEMENT(Command_execute)(Command *cmd)
 	else
 	{
 		return 1;
-	}
+	} */
 	// return provided_Command_execute(cmd);
 }

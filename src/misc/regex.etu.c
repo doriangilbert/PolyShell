@@ -37,19 +37,20 @@ MAKE_DEL_0(Pattern)
 Les fonctions Pattern permettent de vérifier si une chaîne de caractères str vérifie ou non un motif pattern donné.
 */
 
-// REGEX EN BONUS
-
 int IMPLEMENT(Pattern_init)(Pattern *preg, const char *pattern)
 {
+    // TODO Pattern_init
     return provided_Pattern_init(preg, pattern);
 }
 
 void IMPLEMENT(Pattern_finalize)(Pattern *preg)
 {
+    // TODO Pattern_finalize
     provided_Pattern_finalize(preg);
 }
 
 int IMPLEMENT(Pattern_match)(const Pattern *preg, const char *str)
 {
+    // TODO Pattern_match
     return provided_Pattern_match(preg, str);
 }
