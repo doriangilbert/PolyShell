@@ -34,6 +34,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <errno.h>
+#include <sys/wait.h>
+#include "system/info.h"
 
 // #########################################################################
 // #########################################################################
@@ -255,9 +258,252 @@ size_t IMPLEMENT(Command_getNbMember)(const Command *cmd)
 Options > pipes > redirections */
 
 // Ne compte pas dans la partie Projet Tutoré 1
+
+static void __make_redirect__(const char *file, int flags, int fd)
+{
+	// on ouvre le fichier = on récupère un descriteur de fichier permettant de lire ou écrire file
+	const int fdFichier = open(file, flags, 0644);
+	if (fdFichier == -1)
+	{
+		fprintf(stderr, "Command_execute: cannot open %s\n", file);
+		exit(1);
+	}
+	// on duplique ce descripteur de fichier et on place cette copie à la ligne fd de la table des descripteurs de fichier
+	if (dup2(fdFichier, fd) == -1)
+	{
+		perror("Command_execute: dup2");
+		exit(1);
+	}
+	// on ferme le descripteur de fichier original
+	if (close(fdFichier))
+	{
+		perror("Command_execute: close");
+		exit(1);
+	}
+}
+
+static void __soft_fail__(int pipeGauche[2], int pipeDroite[2])
+{
+	if (pipeGauche[0] != -1)
+	{
+		close(pipeGauche[0]);
+		pipeGauche[0] = -1;
+	}
+	if (pipeGauche[1] != -1)
+	{
+		close(pipeGauche[1]);
+		pipeGauche[1] = -1;
+	}
+	if (pipeDroite[0] != -1)
+	{
+		close(pipeDroite[0]);
+		pipeDroite[0] = -1;
+	}
+	if (pipeDroite[1] != -1)
+	{
+		close(pipeDroite[1]);
+		pipeDroite[1] = -1;
+	}
+}
+
 int IMPLEMENT(Command_execute)(Command *cmd)
 {
-	size_t nbM = Command_getNbMember(cmd);
+	// A. COMMANDES INTÉGRÉES AU SHELL = qui ont un effet sur le shell lui-même
+	// ========================================================================
+	// A.1. exit
+	if (!stringCompare(cmd->base, "exit"))
+	{
+		exit(0);
+	}
+	// A.2. cd
+	else if (!stringCompare(cmd->base, "cd"))
+	{
+		if (cmd->nbOptions == 1)
+		{
+			const char *hd;
+			userInformation(NULL, &hd, NULL);
+			CmdMember_addOption(cmd, hd, 0);
+			if (!cmd->status)
+			{
+				fprintf(stderr, "Command_execute: cd: CmdMember_addOption: failed.\n");
+				return 1;
+			}
+		}
+		else if (cmd->nbOptions != 2)
+		{
+			fprintf(stderr, "Command_execute: cd: invalid number of arguments.\n");
+			return 1;
+		}
+		if (chdir(cmd->options[1]))
+		{
+			perror("Command_execute: cd");
+			return 1;
+		}
+		return 0;
+	}
+	// B. PROGRAMMES EXTERNES = programmes situés dans les dossiers listés dans $PATH
+	// ==============================================================================
+	// B.1. on lance toutes les commandes
+	int nbProcessCrees = 0;
+	int codeErreur = 0;
+	int pipeGauche[2] = {-1, -1}; // communication avec la commande qui précède
+	int pipeDroite[2] = {-1, -1}; // communication avec la commande qui suit
+	while (cmd)
+	{
+		// B.1.a. si cmd->next != NULL alors il faut créer un pipe pour communiquer avec la commande qui suit
+		if (cmd->next)
+		{
+			if (pipe(pipeDroite))
+			{
+				perror("Command_execute: pipe");
+				__soft_fail__(pipeGauche, pipeDroite);
+				codeErreur = 1;
+				break;
+			}
+		}
+		// B.1.b. on duplique le processus courant pour faire exécuter cmd->base par un processus fils
+		pid_t pid = fork();
+		// erreur fork
+		if (pid == -1)
+		{
+			perror("Command_execute: fork");
+			__soft_fail__(pipeGauche, pipeDroite);
+			codeErreur = 1;
+			break;
+		}
+		// processus fils
+		else if (pid == 0)
+		{
+			// redirection entrée
+			if (cmd->prev)
+			{
+				// vers extremité en lecture du pipe de gauche
+				if (dup2(pipeGauche[0], 0) == -1)
+				{
+					perror("Command_execute: dup2");
+					exit(1);
+				}
+				if (close(pipeGauche[0]))
+				{
+					perror("Command_execute: close");
+					exit(1);
+				}
+				if (close(pipeGauche[1]))
+				{
+					perror("Command_execute: close");
+					exit(1);
+				}
+			}
+			else if (cmd->redirectionTypes[0] == NORMAL)
+			{
+				__make_redirect__(cmd->redirections[0], O_RDONLY, 0);
+			}
+			// redirection sortie
+			if (cmd->next)
+			{
+				// vers extremité en écriture du pipe de droite
+				if (dup2(pipeDroite[1], 1) == -1)
+				{
+					perror("Command_execute: dup2");
+					exit(1);
+				}
+				if (close(pipeDroite[0]))
+				{
+					perror("Command_execute: close");
+					exit(1);
+				}
+				if (close(pipeDroite[1]))
+				{
+					perror("Command_execute: close");
+					exit(1);
+				}
+			}
+			else if (cmd->redirectionTypes[1] == NORMAL)
+			{
+				__make_redirect__(cmd->redirections[1], O_WRONLY | O_TRUNC | O_CREAT, 1);
+			}
+			else if (cmd->redirectionTypes[1] == APPEND)
+			{
+				__make_redirect__(cmd->redirections[1], O_WRONLY | O_APPEND | O_CREAT, 1);
+			}
+			// redirection erreur
+			if (cmd->redirectionTypes[2] == NORMAL)
+			{
+				__make_redirect__(cmd->redirections[2], O_WRONLY | O_TRUNC | O_CREAT, 2);
+			}
+			else if (cmd->redirectionTypes[2] == APPEND)
+			{
+				__make_redirect__(cmd->redirections[2], O_WRONLY | O_APPEND | O_CREAT, 2);
+			}
+			else if (cmd->redirectionTypes[2] == FUSION)
+			{
+				if (dup2(1, 2) == -1)
+				{
+					perror("Command_execute: dup2");
+					exit(1);
+				}
+			}
+			// on remplace le programme exécuté par le processus fils (polyshell) par un nouveau (cmd->base)
+			CmdMember_addOption(cmd, NULL, 0);
+			if (!cmd->status)
+			{
+				fprintf(stderr, "Command_execute: cd: CmdMember_addOption: failed.\n");
+				exit(1);
+			}
+			execvp(cmd->base, cmd->options);
+			// on ne revient normalement pas de execvp ---> exécuter ces lignes == erreur
+			perror("Command_execute: excevp");
+			exit(1);
+		}
+		// processus parent
+		else
+		{
+			++nbProcessCrees;
+		}
+		// B.1.c. itération suivante
+		// pipe de gauche ne sera plus utile dans la suite
+		if (cmd->prev)
+		{
+			if (close(pipeGauche[0]))
+			{
+				perror("Command_execute: close");
+				__soft_fail__(pipeGauche, pipeDroite);
+				codeErreur = 1;
+				break;
+			}
+			if (close(pipeGauche[1]))
+			{
+				perror("Command_execute: close");
+				__soft_fail__(pipeGauche, pipeDroite);
+				codeErreur = 1;
+				break;
+			}
+		}
+		// le pipe de droite à itération i == le pipe de gauche à itération i + 1
+		pipeGauche[0] = pipeDroite[0];
+		pipeGauche[1] = pipeDroite[1];
+		pipeDroite[0] = -1;
+		pipeDroite[1] = -1;
+		cmd = cmd->next;
+	}
+	// B.2. attente de la terminaison des commandes
+	int nbProcessTermines = 0;
+	while (nbProcessTermines < nbProcessCrees)
+	{
+		int status;
+		if (wait(&status) != -1)
+		{
+			++nbProcessTermines;
+			if (!WIFEXITED(status) || WEXITSTATUS(status))
+			{
+				codeErreur = 1;
+			}
+		}
+	}
+	// B.3. on retourne 0 si et seulement si tout est OK
+	return codeErreur;
+
+	/*size_t nbM = Command_getNbMember(cmd);
 	int pipeG[2] = {-1, -1};
 	int pipeD[2] = {-1, -1};
 	while (cmd)
@@ -367,7 +613,7 @@ int IMPLEMENT(Command_execute)(Command *cmd)
 	{
 		wait(NULL);
 	}
-	return 0;
+	return 0;*/
 
 	/* if (cmd->status)
 	{
