@@ -127,8 +127,9 @@ Vide l'historique.
 
 void IMPLEMENT(History_clear)(History *history)
 {
-	// TODO History_clear
-	provided_History_clear(history);
+	Fifo_clear(&history->storage);
+	history->position = history->storage.tail;
+	//provided_History_clear(history);
 }
 
 /*
@@ -140,10 +141,13 @@ Ajoute une chaîne de caractères (commande) (si celle-ci est non-vide) à l'his
 void IMPLEMENT(History_add)(History *history, const char *cmd)
 {
 	// TODO History_add
-	/*if (Fifo_full(&history->storage)){
-		Fifo_pop(&history->storage);
-	}
-	if (Fifo_push(&history->storage,cmd)) history->position = history->storage.tail;*/
+	/*if (cmd!=NULL){
+		if (Fifo_full(&history->storage) == 1){
+			Fifo_pop(&history->storage);
+		}
+		Fifo_push(&history->storage,cmd);
+		history->position = history->storage.tail;
+	};*/
 	provided_History_add(history, cmd);
 }
 

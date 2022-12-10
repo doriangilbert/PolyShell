@@ -68,19 +68,16 @@ Vide la ligne de commande.
 
 void IMPLEMENT(Input_clear)(Input *input)
 {
-	if (input != NULL && input->current != NULL)
+	 if (input != NULL && input->current != NULL)
 	{
-		while (input->current->next != NULL)
+		while (Input_moveRight(input) == 0);
+		Input_del(input);
+		while (Input_moveLeft(input) == 0)
 		{
-			input->current = input->current->next;
-		}
-		while (input->current != NULL)
-		{
-			Cell_finalize(input->current);
-			input->current = input->current->previous;
+			Input_del(input);
 		}
 	}
-	// provided_Input_clear(input);
+	//provided_Input_clear(input);
 }
 
 /*
@@ -320,7 +317,7 @@ char *IMPLEMENT(Input_toString)(const Input *input)
 {
 	InputIterator it;
 	size_t l = Input_size(input);
-	char *chaine = malloc(sizeof(char *) * l + 1);
+	char *chaine = malloc(sizeof(char *) * l+1);
 	int i = 0;
 	for (InputIterator_initIterator(input, &it); !InputIterator_isOver(&it); InputIterator_next(&it))
 	{

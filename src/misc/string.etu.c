@@ -393,7 +393,7 @@ void IMPLEMENT(mkCommon)(char *result, const char *str)
 {
 	size_t tailleresult = stringLength(result);
 	size_t taillestr = stringLength(str);
-	size_t mintaille;
+	size_t mintaille=0;
 	size_t i = 0;
 	if (tailleresult > taillestr)
 	{
@@ -403,12 +403,14 @@ void IMPLEMENT(mkCommon)(char *result, const char *str)
 	{
 		mintaille = tailleresult;
 	}
+	//char* machaine=malloc(sizeof(char)*mintaille+1);
 	char machaine[mintaille];
 	while (result[i] == str[i] && i < mintaille)
 	{
 		machaine[i] = result[i];
 		i++;
 	}
+	machaine[i]='\0';
 	copyStringWithLength(result, machaine, i + 1);
 	// provided_mkCommon(result, str);
 }

@@ -69,11 +69,9 @@ Libère toutes les ressources allouées par la file fifo.
 
 void IMPLEMENT(Fifo_finalize)(Fifo *fifo)
 {
-	if (fifo->storage != NULL)
-	{
-		free(fifo->storage); // FREE
-	}
-	// provided_Fifo_finalize(fifo);
+	Fifo_clear(fifo);
+	free(fifo->storage);
+	//provided_Fifo_finalize(fifo);
 }
 
 /*
@@ -111,8 +109,7 @@ int IMPLEMENT(Fifo_push)(Fifo *fifo, const char *str)
 	// Si on est en mode COMPOSE
 	else
 	{
-		char *copy_str = duplicateString(str); // MALLOC : NE PAS OUBLIER DE FREE (dans finalize ou pop)
-		fifo->storage[fifo->tail] = copy_str;
+		fifo->storage[fifo->tail]=duplicateString(str); // MALLOC : NE PAS OUBLIER DE FREE (dans finalize ou pop)
 	}
 	// tail + 1 si tail = capacity alors tail = 0
 	fifo->tail = (fifo->tail + 1) % fifo->capacity;
@@ -153,7 +150,7 @@ int IMPLEMENT(Fifo_pop)(Fifo *fifo)
 	{
 		return 1;
 	}
-	if (&fifo->storage[fifo->head] != NULL && fifo->mode != AGGREGATE)
+	if (&fifo->storage[fifo->head] != NULL && fifo->mode == COMPOSE)
 	{
 		free(fifo->storage[fifo->head]);
 	}
