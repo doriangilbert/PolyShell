@@ -39,18 +39,31 @@ Les fonctions Pattern permettent de vérifier si une chaîne de caractères str 
 
 int IMPLEMENT(Pattern_init)(Pattern *preg, const char *pattern)
 {
-    // TODO Pattern_init
-    return provided_Pattern_init(preg, pattern);
+    if (pattern)
+    {
+        int valeur = regcomp(&preg->preg, pattern, REG_EXTENDED);
+        if (valeur == 0) // Si regcomp a réussi
+        {
+            return 0;
+        }
+    }
+    return 1; // Si il n'y a pas de pattern ou si regcomp echoue
+    // return provided_Pattern_init(preg, pattern);
 }
 
 void IMPLEMENT(Pattern_finalize)(Pattern *preg)
 {
-    // TODO Pattern_finalize
-    provided_Pattern_finalize(preg);
+    regfree(&preg->preg);
+    // provided_Pattern_finalize(preg);
 }
 
 int IMPLEMENT(Pattern_match)(const Pattern *preg, const char *str)
 {
-    // TODO Pattern_match
-    return provided_Pattern_match(preg, str);
+    int valeur = regexec(&preg->preg, str, 0, NULL, 0);
+    if (valeur == 0)
+    { // Si str vérifile pattern
+        return 1;
+    }
+    return 0;
+    // return provided_Pattern_match(preg, str);
 }
