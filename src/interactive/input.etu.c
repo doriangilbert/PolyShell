@@ -181,27 +181,12 @@ Efface un caractère puis met le curseur à jour (bouton backspace).
 int IMPLEMENT(Input_backspace)(Input *input)
 {
 	// TODO Input_backspace
-	/*if (input!=NULL && input->current !=NULL && input->pos >=0 && input->pos<=input->current->bucket.top +1)
-	{
-		if (input->pos != 0)
-		{
-			input->pos = input->pos -1;
-			Bucket_remove(&input->current->bucket,input->pos);
-			return 0;
-		}
-		else if (input->current->previous != NULL)
-		{
-			input->current= input->current->previous;
-			input->pos = input->current->bucket.top;
-			Bucket_remove(&input->current->bucket,input->pos);
-			input->current=input->current->next;
-			input->pos=0;
-			return 0;
-		}
+	if(!Input_moveLeft(input)){
+		return Input_del(input);
 	}
-	return 1;*/
+	return 1;
 
-	return provided_Input_backspace(input);
+	//return provided_Input_backspace(input);
 }
 
 /*
@@ -213,10 +198,22 @@ Efface un caractère puis met le curseur à jour (bouton suppr).
 int IMPLEMENT(Input_del)(Input *input)
 {
 	// TODO Input_del
-	/*if (input!=NULL && input->current !=NULL && input->pos< input->current->bucket.top +1)
+	/*if (input!=NULL && input->current !=NULL)
 	{
-		Bucket_remove(&input->current->bucket,input->pos);
-		return 0;
+		if (input->pos < input->current->bucket.top +1 && !Bucket_empty(&input->current->bucket))
+		{
+			Bucket_remove(&input->current->bucket,input->pos);
+			if (Bucket_empty(&input->current->bucket) && input->current->next !=NULL){
+				input->current->next->previous = input->current->previous;
+				input->current=input->current->next;
+				input->pos = 0;
+
+				if (input->current->previous !=NULL){
+					input->current->previous->next =input->current;
+				}
+			}
+			return 0;
+		}
 	}
 	return 1;*/
 
