@@ -180,7 +180,6 @@ Efface un caractère puis met le curseur à jour (bouton backspace).
 
 int IMPLEMENT(Input_backspace)(Input *input)
 {
-	// TODO Input_backspace
 	if(!Input_moveLeft(input)){
 		return Input_del(input);
 	}
