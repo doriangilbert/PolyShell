@@ -250,8 +250,15 @@ Retourne le nombre total de membres d'une commande donnée.
 
 size_t IMPLEMENT(Command_getNbMember)(const Command *cmd)
 {
-	// TODO Command_getNbMember
-	return provided_Command_getNbMember(cmd);
+	assert(cmd);
+	size_t cpt = 1;
+	while (cmd->next != NULL)
+	{
+		cpt++;
+		cmd = cmd->next;
+	}
+	return cpt;
+	// return provided_Command_getNbMember(cmd);
 }
 
 /* L'* est deja gérée par le parser (on a deja remplacé)
