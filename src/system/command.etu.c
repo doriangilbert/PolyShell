@@ -70,7 +70,6 @@ CmdMember *IMPLEMENT(CmdMember_new)(const char *base)
 		}
 	}
 	return nmbr;
-
 	// return provided_CmdMember_new(base);
 }
 
@@ -120,11 +119,20 @@ void CmdMember_finalize(CmdMember *mbr) :
 Libère les ressources allouées par un membre de commande donné.
 */
 
-// Ignorer dans un premier temps (à faire plus tard)
 void IMPLEMENT(CmdMember_finalize)(CmdMember *mbr)
 {
-	// TODO CmdMember_finalize
-	provided_CmdMember_finalize(mbr);
+	assert(mbr);
+	free(mbr->base);
+	for (unsigned i = 0; i < mbr->nbOptions; i++)
+	{
+		free(mbr->options[i]);
+	}
+	free(mbr->options);
+	for (int fd = 0; fd < 3; fd++)
+	{
+		free(mbr->redirections[fd]);
+	}
+	// provided_CmdMember_finalize(mbr);
 }
 
 /*

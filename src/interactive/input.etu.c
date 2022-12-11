@@ -68,16 +68,17 @@ Vide la ligne de commande.
 
 void IMPLEMENT(Input_clear)(Input *input)
 {
-	 if (input != NULL && input->current != NULL)
+	if (input != NULL && input->current != NULL)
 	{
-		while (Input_moveRight(input) == 0);
+		while (Input_moveRight(input) == 0)
+			;
 		Input_del(input);
 		while (Input_moveLeft(input) == 0)
 		{
 			Input_del(input);
 		}
 	}
-	//provided_Input_clear(input);
+	// provided_Input_clear(input);
 }
 
 /*
@@ -112,7 +113,6 @@ Retourne le caractère pointé par le curseur. Si la commande est vide ou si le 
 
 char IMPLEMENT(Input_get)(const Input *input)
 {
-	// A REVOIR
 	if (input != NULL && input->current != NULL && !Bucket_empty(&input->current->bucket) && input->pos < (input->current->bucket.top + 1))
 	{
 		return input->current->bucket.content[input->pos];
@@ -180,12 +180,12 @@ Efface un caractère puis met le curseur à jour (bouton backspace).
 
 int IMPLEMENT(Input_backspace)(Input *input)
 {
-	if(!Input_moveLeft(input)){
+	if (!Input_moveLeft(input))
+	{
 		return Input_del(input);
 	}
 	return 1;
-
-	//return provided_Input_backspace(input);
+	// return provided_Input_backspace(input);
 }
 
 /*
@@ -215,7 +215,6 @@ int IMPLEMENT(Input_del)(Input *input)
 		}
 	}
 	return 1;*/
-
 	return provided_Input_del(input);
 }
 
@@ -299,7 +298,6 @@ int IMPLEMENT(Input_moveRight)(Input *input)
 	{
 		return 1;
 	}
-
 	// return provided_Input_moveRight(input);
 }
 
@@ -313,7 +311,7 @@ char *IMPLEMENT(Input_toString)(const Input *input)
 {
 	InputIterator it;
 	size_t l = Input_size(input);
-	char *chaine = malloc(sizeof(char *) * l+1);
+	char *chaine = malloc(sizeof(char *) * l + 1);
 	int i = 0;
 	for (InputIterator_initIterator(input, &it); !InputIterator_isOver(&it); InputIterator_next(&it))
 	{
@@ -334,8 +332,6 @@ char *IMPLEMENT(Input_toString)(const Input *input)
 
 void IMPLEMENT(InputIterator_initIterator)(const Input *input, InputIterator *inputIterator)
 {
-	// TODO InputIterator_initIterator
-	//  A faire : Gérer le cas où input est vide
 	if (input != NULL && input->current != NULL)
 	{
 		inputIterator->pos = 0;
@@ -345,7 +341,12 @@ void IMPLEMENT(InputIterator_initIterator)(const Input *input, InputIterator *in
 			inputIterator->current = inputIterator->current->previous;
 		}
 	}
-	provided_InputIterator_initIterator(input, inputIterator);
+	else
+	{
+		inputIterator->pos = 0;
+		inputIterator->current = NULL;
+	}
+	// provided_InputIterator_initIterator(input, inputIterator);
 }
 
 /*

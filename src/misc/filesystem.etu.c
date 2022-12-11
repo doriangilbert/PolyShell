@@ -158,8 +158,8 @@ int IMPLEMENT(FileIterator_isOver)(const FileIterator *fIterator)
 // Renvoie current
 const char *IMPLEMENT(FileIterator_get)(const FileIterator *fIterator)
 {
-	// TODO FileIterator_get
-	return provided_FileIterator_get(fIterator);
+	return fIterator->current;
+	// return provided_FileIterator_get(fIterator);
 }
 
 // Changer current pour qu'il contienne une nouvelle ligne
