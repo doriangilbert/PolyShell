@@ -101,12 +101,11 @@ const char *IMPLEMENT(FolderIterator_get)(const FolderIterator *fIterator)
 
 int IMPLEMENT(FolderIterator_isDir)(const FolderIterator *fIterator)
 {
-	// TODO FolderIterator_isDir
-	/*if(!FolderIterator_isOver(fIterator)){
-		if (fIterator->ent->d_type == DT_DIR) return 0;
+	if(!FolderIterator_isOver(fIterator)){
+		if (fIterator->ent->d_type == DT_DIR) return 1;
 	}
-	return 1;*/
-	return provided_FolderIterator_isDir(fIterator);
+	return 0;
+	//return provided_FolderIterator_isDir(fIterator);
 }
 
 void IMPLEMENT(FolderIterator_next)(FolderIterator *fIterator)
@@ -138,21 +137,31 @@ Les fonctions FileIterator permettent de lire un fichier texte (une ligne à la 
 
 int IMPLEMENT(FileIterator_init)(FileIterator *fIterator, FILE *file)
 {
-	// TODO FileIterator_init
-	return provided_FileIterator_init(fIterator, file);
+	if (file)
+	{
+		fIterator->file = file;
+		fIterator->current = NULL;
+		FileIterator_next(fIterator);
+		return 0;
+	}
+	return 1;
+	// return provided_FileIterator_init(fIterator, file);
 }
 
 void IMPLEMENT(FileIterator_finalize)(FileIterator *fIterator)
 {
-	// TODO FileIterator_finalize
-	provided_FileIterator_finalize(fIterator);
+	if (fIterator->current)
+	{
+		free(fIterator->current);
+	}
+	// provided_FileIterator_finalize(fIterator);
 }
 
 // Dernière ligne atteinte
 int IMPLEMENT(FileIterator_isOver)(const FileIterator *fIterator)
 {
-	// TODO FileIterator_isOver
-	return provided_FileIterator_isOver(fIterator);
+	return feof(fIterator->file);
+	// return provided_FileIterator_isOver(fIterator);
 }
 
 // Renvoie current

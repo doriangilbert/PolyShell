@@ -131,18 +131,19 @@ int IMPLEMENT(autocomplete)(const char *prefix, unsigned int limit, unsigned int
 		FolderIterator_next(&it);
 	}
 	FolderIterator_finalize(&it);
-
 	// Se baser sur nbItems aide mais ne suffit pas dans certains cas pour trancher
 	if (*nbItems < 1)
 	{
-		Fifo_finalize(*results);
+		//Fifo_finalize(*results);
+		Fifo_delete(*results);
 		*results = NULL;
 	}
 	else
 	{
 		if (stringLength(*extend) != 0)
 		{
-			Fifo_finalize(*results);
+			//Fifo_finalize(*results);
+			Fifo_delete(*results);
 			*results = NULL;
 		}
 		else
