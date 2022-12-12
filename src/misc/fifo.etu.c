@@ -69,9 +69,9 @@ Libère toutes les ressources allouées par la file fifo.
 
 void IMPLEMENT(Fifo_finalize)(Fifo *fifo)
 {
-	Fifo_clear(fifo);
-	free(fifo->storage);
-	//provided_Fifo_finalize(fifo);
+	Fifo_clear(fifo);	 // On vide fifo
+	free(fifo->storage); // On libère fifo->storage
+						 // provided_Fifo_finalize(fifo);
 }
 
 /*
@@ -82,9 +82,9 @@ Vide fifo.
 
 void IMPLEMENT(Fifo_clear)(Fifo *fifo)
 {
-	while (!Fifo_empty(fifo))
-		Fifo_pop(fifo);
-	// provided_Fifo_clear(fifo);
+	while (!Fifo_empty(fifo)) // Tant que la fifo n'est pas vide
+		Fifo_pop(fifo);		  // On retire de la file
+							  // provided_Fifo_clear(fifo);
 }
 
 /*
@@ -99,20 +99,20 @@ Rajoute la chaîne de caractères str à la fin de la file (attention au mode ch
 int IMPLEMENT(Fifo_push)(Fifo *fifo, const char *str)
 {
 	// Si la file est pleine -> ERREUR
-	if (Fifo_full(fifo))
+	if (Fifo_full(fifo)) // Si fifo est plein
 		return 1;
 	// Si on est en mode AGGREGATE
 	if (fifo->mode == AGGREGATE)
 	{
-		fifo->storage[fifo->tail] = (char *)str; // Storage est un tableau de pointeurs de chaine de caractères et pas un tableau de caractères
+		fifo->storage[fifo->tail] = (char *)str; // On met str à la position tail // Storage est un tableau de pointeurs de chaine de caractères et pas un tableau de caractères
 	}
 	// Si on est en mode COMPOSE
 	else
 	{
-		fifo->storage[fifo->tail]=duplicateString(str); // MALLOC : NE PAS OUBLIER DE FREE (dans finalize ou pop)
+		fifo->storage[fifo->tail] = duplicateString(str); // On met str à la position tail // MALLOC : NE PAS OUBLIER DE FREE (dans finalize ou pop)
 	}
 	// tail + 1 si tail = capacity alors tail = 0
-	fifo->tail = (fifo->tail + 1) % fifo->capacity;
+	fifo->tail = (fifo->tail + 1) % fifo->capacity; // On incrémente tail
 	return 0;
 	// return provided_Fifo_push(fifo, str);
 }
@@ -125,13 +125,13 @@ Retourne un pointeur constant sur le plus vieil élément de la file ou NULL si 
 
 const char *IMPLEMENT(Fifo_front)(const Fifo *fifo)
 {
-	if (Fifo_empty(fifo))
+	if (Fifo_empty(fifo)) // Si fifo est vide
 	{
 		return NULL;
 	}
 	else
 	{
-		const char *pt = &fifo->storage[fifo->head][0];
+		const char *pt = &fifo->storage[fifo->head][0]; // On retourne le pointeur sur head
 		return pt;
 	}
 	// return provided_Fifo_front(fifo);
@@ -146,15 +146,15 @@ Supprime le plus vieil élément de fifo et retourne un code d'erreur.
 // On enlève au niveau de head et on incrémente head
 int IMPLEMENT(Fifo_pop)(Fifo *fifo)
 {
-	if (Fifo_empty(fifo))
+	if (Fifo_empty(fifo)) // Si fifo est vide
 	{
 		return 1;
 	}
 	if (&fifo->storage[fifo->head] != NULL && fifo->mode == COMPOSE)
 	{
-		free(fifo->storage[fifo->head]);
+		free(fifo->storage[fifo->head]); // On libère le caractère à head
 	}
-	fifo->head = (fifo->head + 1) % fifo->capacity;
+	fifo->head = (fifo->head + 1) % fifo->capacity; // On incrémente head
 	return 0;
 	// return provided_Fifo_pop(fifo);
 }

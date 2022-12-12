@@ -118,12 +118,12 @@ Supprime le position-ième caractère de bucket.
 void IMPLEMENT(Bucket_remove)(Bucket *bucket, int position)
 {
 	assert(!Bucket_empty(bucket));
-	assert(position >= 0 && position <= bucket->top);
+	assert(position >= 0 && position <= bucket->top); // On vérifie que la position est bien dans le bucket
 	for (int i = position; i < (bucket->top); i++)
 	{
-		bucket->content[i] = bucket->content[i + 1];
+		bucket->content[i] = bucket->content[i + 1]; // On décale les caracteres
 	}
-	bucket->top = (bucket->top) - 1;
+	bucket->top = (bucket->top) - 1; // On décrémente top
 	/* Correction prof :
 	while(position<bucket->top) {
 		bucket->content[position]=bucket->content[position+1];
@@ -143,15 +143,16 @@ Insère c en position "position" dans bucket.
 void IMPLEMENT(Bucket_insert)(Bucket *bucket, int position, char c)
 {
 	assert(!Bucket_full(bucket));
-	assert(position >= 0 && position <= bucket->top + 1);
-	if (position == bucket->top + 1)
+	assert(position >= 0 && position <= bucket->top + 1); // On vérifie que la position est bien dans le bucket
+	if (position == bucket->top + 1)					  // Si on est au bout du bucket
 	{
-		bucket->content[position] = c;
+		bucket->content[position] = c; // On met c à la fin
 	}
 	else
 	{
 		char temp = bucket->content[position];
 		char temp2;
+		// On décale les caractères du bucket à partir de position
 		for (int i = position + 1; i <= (bucket->top) + 1; i++)
 		{
 			temp2 = bucket->content[i];
@@ -160,7 +161,7 @@ void IMPLEMENT(Bucket_insert)(Bucket *bucket, int position, char c)
 		}
 		bucket->content[position] = c;
 	}
-	bucket->top = bucket->top + 1;
+	bucket->top = bucket->top + 1; // On incrémente top
 	// provided_Bucket_insert(bucket, position, c);
 }
 
@@ -174,11 +175,11 @@ void IMPLEMENT(Bucket_move)(Bucket *from, int position, Bucket *to)
 {
 	char temp;
 	int top = from->top;
-	for (int i = 0; i <= top - position; i++)
+	for (int i = 0; i <= top - position; i++) // On déplace les caractères de from à to
 	{
-		temp = from->content[position];
-		Bucket_remove(from, position);
-		Bucket_insert(to, i, temp);
+		temp = from->content[position]; // On récupère le caractère à déplacer
+		Bucket_remove(from, position);	// On le supprime de from
+		Bucket_insert(to, i, temp);		// On l'insère dans to
 	}
 	// provided_Bucket_move(from, position, to);
 }

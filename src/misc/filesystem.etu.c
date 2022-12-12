@@ -61,12 +61,12 @@ int IMPLEMENT(FolderIterator_init)(FolderIterator *fIterator, const char *path, 
 	fIterator->skipSpecials = skipSpecials;
 	if (path)
 	{
-		DIR *dossier = opendir(path);
+		DIR *dossier = opendir(path); // ouvre le dossier à path
 		if (dossier)
 		{
 			fIterator->dir = dossier;
 			fIterator->ent = NULL;
-			FolderIterator_next(fIterator);
+			FolderIterator_next(fIterator); // lit le premier fichier
 			return 0;
 		}
 	}
@@ -78,7 +78,7 @@ int IMPLEMENT(FolderIterator_init)(FolderIterator *fIterator, const char *path, 
 void IMPLEMENT(FolderIterator_finalize)(FolderIterator *fIterator)
 {
 	fIterator->skipSpecials = 0;
-	closedir(fIterator->dir);
+	closedir(fIterator->dir); // On ferme le dossier
 	fIterator->ent = NULL;
 	// provided_FolderIterator_finalize(fIterator);
 }
@@ -93,7 +93,7 @@ const char *IMPLEMENT(FolderIterator_get)(const FolderIterator *fIterator)
 {
 	if (!FolderIterator_isOver(fIterator))
 	{
-		return fIterator->ent->d_name;
+		return fIterator->ent->d_name; // On retourne le nom du fichier courant
 	}
 	return "";
 	// return provided_FolderIterator_get(fIterator);
@@ -101,11 +101,13 @@ const char *IMPLEMENT(FolderIterator_get)(const FolderIterator *fIterator)
 
 int IMPLEMENT(FolderIterator_isDir)(const FolderIterator *fIterator)
 {
-	if(!FolderIterator_isOver(fIterator)){
-		if (fIterator->ent->d_type == DT_DIR) return 1;
+	if (!FolderIterator_isOver(fIterator))
+	{
+		if (fIterator->ent->d_type == DT_DIR)
+			return 1; // Si il s'agit d'un dossier
 	}
 	return 0;
-	//return provided_FolderIterator_isDir(fIterator);
+	// return provided_FolderIterator_isDir(fIterator);
 }
 
 void IMPLEMENT(FolderIterator_next)(FolderIterator *fIterator)
@@ -141,7 +143,7 @@ int IMPLEMENT(FileIterator_init)(FileIterator *fIterator, FILE *file)
 	{
 		fIterator->file = file;
 		fIterator->current = NULL;
-		FileIterator_next(fIterator);
+		FileIterator_next(fIterator); // On lit la première ligne
 		return 0;
 	}
 	return 1;
@@ -160,14 +162,14 @@ void IMPLEMENT(FileIterator_finalize)(FileIterator *fIterator)
 // Dernière ligne atteinte
 int IMPLEMENT(FileIterator_isOver)(const FileIterator *fIterator)
 {
-	return feof(fIterator->file);
+	return feof(fIterator->file); // On vérifie si on est à la fin du fichier
 	// return provided_FileIterator_isOver(fIterator);
 }
 
 // Renvoie current
 const char *IMPLEMENT(FileIterator_get)(const FileIterator *fIterator)
 {
-	return fIterator->current;
+	return fIterator->current; // On retourne la ligne courante
 	// return provided_FileIterator_get(fIterator);
 }
 

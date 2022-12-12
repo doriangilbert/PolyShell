@@ -41,7 +41,7 @@ int IMPLEMENT(Pattern_init)(Pattern *preg, const char *pattern)
 {
     if (pattern)
     {
-        int valeur = regcomp(&preg->preg, pattern, REG_EXTENDED);
+        int valeur = regcomp(&preg->preg, pattern, REG_EXTENDED); // On compile pattern
         if (valeur == 0) // Si regcomp a réussi
         {
             return 0;
@@ -53,7 +53,7 @@ int IMPLEMENT(Pattern_init)(Pattern *preg, const char *pattern)
 
 void IMPLEMENT(Pattern_finalize)(Pattern *preg)
 {
-    regfree(&preg->preg);
+    regfree(&preg->preg); // On libère la mémoire allouée par regcomp
     // provided_Pattern_finalize(preg);
 }
 
@@ -61,7 +61,7 @@ int IMPLEMENT(Pattern_match)(const Pattern *preg, const char *str)
 {
     int valeur = regexec(&preg->preg, str, 0, NULL, 0);
     if (valeur == 0)
-    { // Si str vérifile pattern
+    { // Si str vérifie le pattern
         return 1;
     }
     return 0;

@@ -260,13 +260,13 @@ Déplace le curseur vers la droite.
 int IMPLEMENT(Input_moveRight)(Input *input)
 {
 
-	if (input != NULL && input->current != NULL && !Bucket_empty(&input->current->bucket) && input->pos != input->current->bucket.top + 1)
+	if (input != NULL && input->current != NULL && !Bucket_empty(&input->current->bucket) && input->pos != input->current->bucket.top + 1) // Si la liste n'est pas vide et que le curseur n'est pas au bout du bucket
 	{
 		if (input->pos == input->current->bucket.top)
 		{
 			if (input->current->next != NULL)
 			{
-				input->current = input->current->next;
+				input->current = input->current->next; // On passe à la cell suivante
 				input->pos = 0;
 				return 0;
 			}
@@ -279,10 +279,9 @@ int IMPLEMENT(Input_moveRight)(Input *input)
 				}
 				else
 				{
-					input->current->next = Cell_new();
-					input->current->next->previous = input->current;
-					input->current = input->current->next;
-
+					input->current->next = Cell_new();				 // On crée une nouvelle cell
+					input->current->next->previous = input->current; // On fait le lien entre la nouvelle cell et la cell courante
+					input->current = input->current->next;			 // On passe à la cell suivante
 					input->pos = 0;
 					return 0;
 				}
@@ -313,12 +312,12 @@ char *IMPLEMENT(Input_toString)(const Input *input)
 	size_t l = Input_size(input);
 	char *chaine = malloc(sizeof(char *) * l + 1);
 	size_t i = 0;
-	for (InputIterator_initIterator(input, &it); !InputIterator_isOver(&it) || i<l; InputIterator_next(&it))
+	for (InputIterator_initIterator(input, &it); !InputIterator_isOver(&it) || i < l; InputIterator_next(&it)) // On parcourt input avec iterator
 	{
-		chaine[i] = InputIterator_get(&it);
+		chaine[i] = InputIterator_get(&it); // On ajoute le caractère à la chaine
 		i++;
 	}
-	chaine[i] = '\0';
+	chaine[i] = '\0'; // On met la fin de chaine
 	return chaine;
 	// return provided_Input_toString(input);
 }
@@ -335,8 +334,8 @@ void IMPLEMENT(InputIterator_initIterator)(const Input *input, InputIterator *in
 	if (input != NULL && input->current != NULL)
 	{
 		inputIterator->pos = 0;
-		inputIterator->current = input->current;
-		while (inputIterator->current->previous != NULL)
+		inputIterator->current = input->current;		 // On initialise inputIterator sur la cell courante de input
+		while (inputIterator->current->previous != NULL) // On retourne au début de input
 		{
 			inputIterator->current = inputIterator->current->previous;
 		}
@@ -357,7 +356,7 @@ Retourne vrai si et seulement si x et other pointent sur le même caractère de 
 
 int IMPLEMENT(InputIterator_equals)(const InputIterator *x, const InputIterator *other)
 {
-	if (&x->current->bucket.content[x->pos] == &other->current->bucket.content[other->pos])
+	if (&x->current->bucket.content[x->pos] == &other->current->bucket.content[other->pos]) // Si on pointe sur le même caractère
 	{
 		return 1;
 	}
@@ -374,13 +373,13 @@ int IMPLEMENT(InputIterator_isOver)(const InputIterator *inputIterator)
 
 void IMPLEMENT(InputIterator_next)(InputIterator *inputIterator)
 {
-	Input_moveRight(inputIterator);
-	//provided_InputIterator_next(inputIterator);
+	Input_moveRight(inputIterator); // On déplace le curseur vers la droite
+	// provided_InputIterator_next(inputIterator);
 }
 
 char IMPLEMENT(InputIterator_get)(const InputIterator *inputIterator)
 {
-	return Input_get(inputIterator);
+	return Input_get(inputIterator); // On récupère le caractère courant
 	// return provided_InputIterator_get(inputIterator);
 }
 
@@ -394,9 +393,9 @@ int IMPLEMENT(Input_load)(Input *input, const char *cmd)
 {
 	if (cmd == NULL)
 		return 1;
-	Input_clear(input);
+	Input_clear(input); // On vide input
 	for (size_t i = 0; i <= stringLength(cmd); i++)
-		Input_insert(input, cmd[i]);
+		Input_insert(input, cmd[i]); // On insère chaque caractère de cmd dans input
 	return 0;
 	// return provided_Input_load(input, cmd);
 }

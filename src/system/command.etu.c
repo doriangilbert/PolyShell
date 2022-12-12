@@ -262,8 +262,8 @@ size_t IMPLEMENT(Command_getNbMember)(const Command *cmd)
 	size_t cpt = 1;
 	while (cmd->next != NULL)
 	{
-		cpt++;
-		cmd = cmd->next;
+		cpt++;			 // On incrémente cpt
+		cmd = cmd->next; // On passe au prochain membre
 	}
 	return cpt;
 	// return provided_Command_getNbMember(cmd);

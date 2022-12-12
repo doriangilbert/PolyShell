@@ -44,7 +44,7 @@ int IMPLEMENT(Cell_init)(Cell *cell)
 	cell->next = cell->previous = NULL;
 	if (Bucket_init(&cell->bucket))
 	{
-		return 1;
+		return 1; // init a echoué
 	}
 	return 0;
 	// return provided_Cell_init(cell);

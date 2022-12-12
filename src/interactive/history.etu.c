@@ -97,28 +97,28 @@ void IMPLEMENT(History_finalize)(History *history, const char *filename)
 		char *path = prependHomeDir(duplicateString(filename)); // Gérer le ~ qui symbolise le répertoire utilisateur (/home/user)
 		if (path)
 		{
-			FILE *fichier = fopen(path, "w");
+			FILE *fichier = fopen(path, "w"); // On ouvre le fichier à path en écriture
 			if (fichier)
 			{
 				char *chaine;
 				char *chaine2;
 				while (!Fifo_empty(&history->storage))
 				{
-					chaine = duplicateString(history->storage.storage[history->storage.head]);
+					chaine = duplicateString(history->storage.storage[history->storage.head]); // On récupère la chaine à l'indice head
 					chaine2 = getProtString(chaine, '#');
-					fputs(chaine2, fichier);
+					fputs(chaine2, fichier); // On écrit dans le fichier
 					free(chaine);
 					free(chaine2);
-					fputs("\n", fichier);
-					Fifo_pop(&history->storage);
+					fputs("\n", fichier);		 // On retourne à la ligne
+					Fifo_pop(&history->storage); // On vide fifo en supprimant
 				}
-				fclose(fichier);
+				fclose(fichier); // On ferme le fichier
 			}
 			free(path);
 		}
 	}
-	history->position = history->storage.head;
-	Fifo_finalize(&history->storage);
+	history->position = history->storage.head; // On met la position à head
+	Fifo_finalize(&history->storage);		   // On libère fifo
 	// Fifo_finalize à la fin
 	// provided_History_finalize(history, filename);
 }
@@ -131,8 +131,8 @@ Vide l'historique.
 
 void IMPLEMENT(History_clear)(History *history)
 {
-	Fifo_clear(&history->storage);
-	history->position = history->storage.tail;
+	Fifo_clear(&history->storage);			   // On vide fifo
+	history->position = history->storage.tail; // On met la position à tail
 	// provided_History_clear(history);
 }
 
@@ -144,14 +144,14 @@ Ajoute une chaîne de caractères (commande) (si celle-ci est non-vide) à l'his
 
 void IMPLEMENT(History_add)(History *history, const char *cmd)
 {
-	if (isNotEmpty(cmd))
+	if (isNotEmpty(cmd)) // On vérifie que cmd n'est pas vide
 	{
-		if (Fifo_full(&history->storage) == 1)
+		if (Fifo_full(&history->storage) == 1) // Si fifo est plein
 		{
-			Fifo_pop(&history->storage);
+			Fifo_pop(&history->storage); // On retire le plus vieil élément
 		}
-		Fifo_push(&history->storage, cmd);
-		history->position = history->storage.tail;
+		Fifo_push(&history->storage, cmd);		   // On ajoute cmd à fifo
+		history->position = history->storage.tail; // On met la position à tail
 	}
 	// provided_History_add(history, cmd);
 }
@@ -164,12 +164,12 @@ Retourne la dernière commande saisie par l'utilisateur. Il doit être possible 
 
 const char *IMPLEMENT(History_up)(History *history)
 {
-	if (history->position == history->storage.head)
+	if (history->position == history->storage.head) // Si position est à head
 		return NULL;
 	else
 	{
-		history->position = (history->position - 1) % history->storage.capacity;
-		return (const char *)history->storage.storage[history->position];
+		history->position = (history->position - 1) % history->storage.capacity; // On décrémente position
+		return (const char *)history->storage.storage[history->position];		 // On retourne la commande correspondante
 	}
 	// return provided_History_up(history);
 }
@@ -182,17 +182,17 @@ Retourne une commande plus récente si possible ou NULL en cas d'erreur. La fonc
 
 const char *IMPLEMENT(History_down)(History *history)
 {
-	if (history->position == history->storage.tail)
+	if (history->position == history->storage.tail) // Si position est à tail
 		return NULL;
-	else if (history->position == history->storage.tail - 1 % history->storage.capacity)
+	else if (history->position == history->storage.tail - 1 % history->storage.capacity) // Si position est à tail - 1
 	{
-		history->position = history->storage.tail;
+		history->position = history->storage.tail; // On met position à tail
 		return "";
 	}
 	else
 	{
-		history->position = (history->position + 1) % history->storage.capacity;
-		return (const char *)history->storage.storage[history->position];
+		history->position = (history->position + 1) % history->storage.capacity; // On incrémente position
+		return (const char *)history->storage.storage[history->position];		 // On retourne la commande correspondante
 	}
 	// return provided_History_down(history);
 }

@@ -273,9 +273,9 @@ char *IMPLEMENT(concatenateStrings)(const char *str1, const char *str2, size_t m
 	{
 		taille = minDestSize;
 	}
-	char *str = malloc(sizeof(char) * taille); // MALLOC : NE PAS OUBLIER DE FREE
-	copyStringWithLength(str, str1, taille);
-	copyStringWithLength(str + stringLength(str1), str2, taille);
+	char *str = malloc(sizeof(char) * taille);					  // MALLOC : NE PAS OUBLIER DE FREE
+	copyStringWithLength(str, str1, taille);					  // On copie str1 dans str
+	copyStringWithLength(str + stringLength(str1), str2, taille); // On copie str2 dans str
 	return str;
 	// return provided_concatenateStrings(str1, str2, minDestSize);
 }
@@ -295,7 +295,7 @@ void IMPLEMENT(copyStringWithLength)(char *dest, const char *src, size_t destSiz
 	size_t i = 0;
 	while (*src && i < destSize - 1)
 	{
-		dest[i] = *src;
+		dest[i] = *src; // On met src dans dest
 		src++;
 		i++;
 	}
@@ -378,7 +378,7 @@ char *IMPLEMENT(subString)(const char *start, size_t length)
 {
 	size_t taille = length + 1;
 	char *str = malloc(sizeof(char) * taille); // MALLOC : NE PAS OUBLIER DE FREE
-	copyStringWithLength(str, start, taille);
+	copyStringWithLength(str, start, taille);  // On copie start dans str
 	return str;
 	// return provided_subString(start, length);
 }
@@ -393,7 +393,7 @@ void IMPLEMENT(mkCommon)(char *result, const char *str)
 {
 	size_t tailleresult = stringLength(result);
 	size_t taillestr = stringLength(str);
-	size_t mintaille=0;
+	size_t mintaille = 0;
 	size_t i = 0;
 	if (tailleresult > taillestr)
 	{
@@ -403,16 +403,16 @@ void IMPLEMENT(mkCommon)(char *result, const char *str)
 	{
 		mintaille = tailleresult;
 	}
-	//char* machaine=malloc(sizeof(char)*mintaille+1);
+	// char* machaine=malloc(sizeof(char)*mintaille+1);
 	char machaine[mintaille];
 	while (result[i] == str[i] && i < mintaille)
 	{
 		machaine[i] = result[i];
 		i++;
 	}
-	machaine[i]='\0';
-	copyStringWithLength(result, machaine, i + 1);
-	// provided_mkCommon(result, str);
+	machaine[i] = '\0';
+	copyStringWithLength(result, machaine, i + 1); // On copie machaine dans result
+												   // provided_mkCommon(result, str);
 }
 
 /*
@@ -455,7 +455,7 @@ char *IMPLEMENT(getProtString)(const char *str, char c)
 		j++;
 	}
 	char *machaine = malloc((sizeof(char) * (taille))); // MALLOC : NE PAS OUBLIER DE FREE
-	if (!machaine)
+	if (!machaine)// Si malloc a échoué
 	{
 		free(machaine);
 	}

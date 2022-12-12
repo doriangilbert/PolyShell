@@ -29,8 +29,8 @@
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 // partner-1 firstname__name
-const char *name1 = "Jean_Yves$Dupond";
+const char *name1 = "Dorian$GILBERT";
 
 // partner-2 firstname__name
-const char *name2    = "alone$alone";
+const char *name2    = "Matheo$DHONDT";
                   // = "Pierre$Marchand_Barbier";
