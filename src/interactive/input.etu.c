@@ -312,8 +312,8 @@ char *IMPLEMENT(Input_toString)(const Input *input)
 	InputIterator it;
 	size_t l = Input_size(input);
 	char *chaine = malloc(sizeof(char *) * l + 1);
-	int i = 0;
-	for (InputIterator_initIterator(input, &it); !InputIterator_isOver(&it); InputIterator_next(&it))
+	size_t i = 0;
+	for (InputIterator_initIterator(input, &it); !InputIterator_isOver(&it) || i<l; InputIterator_next(&it))
 	{
 		chaine[i] = InputIterator_get(&it);
 		i++;
@@ -375,7 +375,7 @@ int IMPLEMENT(InputIterator_isOver)(const InputIterator *inputIterator)
 void IMPLEMENT(InputIterator_next)(InputIterator *inputIterator)
 {
 	Input_moveRight(inputIterator);
-	// provided_InputIterator_next(inputIterator);
+	//provided_InputIterator_next(inputIterator);
 }
 
 char IMPLEMENT(InputIterator_get)(const InputIterator *inputIterator)

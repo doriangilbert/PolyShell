@@ -101,10 +101,14 @@ void IMPLEMENT(History_finalize)(History *history, const char *filename)
 			if (fichier)
 			{
 				char *chaine;
+				char *chaine2;
 				while (!Fifo_empty(&history->storage))
 				{
 					chaine = duplicateString(history->storage.storage[history->storage.head]);
-					fputs(getProtString(chaine, '#'), fichier);
+					chaine2 = getProtString(chaine, '#');
+					fputs(chaine2, fichier);
+					free(chaine);
+					free(chaine2);
 					fputs("\n", fichier);
 					Fifo_pop(&history->storage);
 				}
