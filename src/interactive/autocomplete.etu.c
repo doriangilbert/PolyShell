@@ -109,16 +109,20 @@ int IMPLEMENT(autocomplete)(const char *prefix, unsigned int limit, unsigned int
 	while (!FolderIterator_isOver(&it))
 	{
 		const char *elem = FolderIterator_get(&it);
+		char *elem2 = duplicateString(elem); //Pour éviter const // MALLOC
 		if (FolderIterator_isDir(&it))
 		{
-			size_t taille = stringLength(elem) + 1;
-			elem = concatenateStrings(elem, "/", taille); // MALLOC
+			size_t taille = stringLength(elem2) + 1;
+			char *elem3 = concatenateStrings(elem2, "/", taille); //On ajoute "/", on sépare pour pouvoir free // MALLOC
+			free(elem2); //On libère ce qu'on utilise dans concatenateStrings pour ne pas avoir d'erreur valgrind quand on remplace
+			elem2 = duplicateString(elem3); //On récupère la chaine avec le "/" en plus // MALLOC
+			free(elem3); //On libère l'élement séparé
 		}
-		const char *suffix = startWith(elem, prefix, 1);
+		const char *suffix = startWith(elem2, prefix, 1);
 		if (suffix != NULL)
 		{
 			++(*nbItems);
-			Fifo_push(*results, elem);
+			Fifo_push(*results, elem2);
 			if (*extend == NULL)
 			{
 				*extend = duplicateString(suffix); // MALLOC
@@ -128,6 +132,7 @@ int IMPLEMENT(autocomplete)(const char *prefix, unsigned int limit, unsigned int
 				mkCommon(*extend, suffix);
 			}
 		}
+		free(elem2); //Free du premier duplicateString
 		FolderIterator_next(&it);
 	}
 	FolderIterator_finalize(&it);
@@ -149,6 +154,7 @@ int IMPLEMENT(autocomplete)(const char *prefix, unsigned int limit, unsigned int
 		else
 		{
 			*extend = NULL;
+			free(*extend);
 		}
 	}
 	return 0;
