@@ -33,31 +33,51 @@
 MAKE_NEW_0(Cell)
 MAKE_DEL_0(Cell)
 
+/*
+int Cell_init(Cell *cell) :
+
+Initialise une cellule vide isolée.
+*/
+
 int IMPLEMENT(Cell_init)(Cell *cell)
 {
 	cell->next = cell->previous = NULL;
-	if (Bucket_init(&cell->bucket)) {
-		return 1;
+	if (Bucket_init(&cell->bucket))
+	{
+		return 1; // init a echoué
 	}
 	return 0;
-    //return provided_Cell_init(cell);
+	// return provided_Cell_init(cell);
 }
-	
+
+/*
+void Cell_finalize(Cell *cell) :
+
+Libère les ressources allouées par cell.
+*/
+
 void IMPLEMENT(Cell_finalize)(Cell *cell)
 {
-    Bucket_finalize(&cell->bucket);
-	//provided_Cell_finalize(cell);
+	Bucket_finalize(&cell->bucket);
+	// provided_Cell_finalize(cell);
 }
+
+/*
+void Cell_insertAfter(Cell *cell, Cell *newCell) :
+
+Insère newCell après cell. On suppose que newCell vient d'être créée.
+*/
 
 void IMPLEMENT(Cell_insertAfter)(Cell *cell, Cell *newCell)
 {
-    newCell->next = (cell->next);
+	newCell->next = (cell->next);
 	newCell->previous = cell;
-	if (newCell->next != NULL) {
+	if (newCell->next != NULL)
+	{
 		(newCell->next)->previous = newCell;
 	}
-	cell->next=newCell;
-	
+	cell->next = newCell;
+
 	/*Correction Prof :
 	newCell->previous=cell;
 	newCell->next=cell->next;
@@ -65,6 +85,6 @@ void IMPLEMENT(Cell_insertAfter)(Cell *cell, Cell *newCell)
 		cell->next->previous=newCell;
 	}
 	cell->next=newCell;*/
-	
-	//provided_Cell_insertAfter(cell, newCell);
+
+	// provided_Cell_insertAfter(cell, newCell);
 }

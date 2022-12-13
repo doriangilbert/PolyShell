@@ -30,22 +30,40 @@
 // #########################################################################
 // #########################################################################
 
-MAKE_NEW_1(Pattern, const char*)
+MAKE_NEW_1(Pattern, const char *)
 MAKE_DEL_0(Pattern)
 
-//REGEX EN BONUS
+/*
+Les fonctions Pattern permettent de vérifier si une chaîne de caractères str vérifie ou non un motif pattern donné.
+*/
 
 int IMPLEMENT(Pattern_init)(Pattern *preg, const char *pattern)
 {
-    return provided_Pattern_init(preg, pattern);
+    if (pattern)
+    {
+        int valeur = regcomp(&preg->preg, pattern, REG_EXTENDED); // On compile pattern
+        if (valeur == 0) // Si regcomp a réussi
+        {
+            return 0;
+        }
+    }
+    return 1; // Si il n'y a pas de pattern ou si regcomp echoue
+    // return provided_Pattern_init(preg, pattern);
 }
 
 void IMPLEMENT(Pattern_finalize)(Pattern *preg)
 {
-    provided_Pattern_finalize(preg);
+    regfree(&preg->preg); // On libère la mémoire allouée par regcomp
+    // provided_Pattern_finalize(preg);
 }
 
 int IMPLEMENT(Pattern_match)(const Pattern *preg, const char *str)
 {
-    return provided_Pattern_match(preg, str);
+    int valeur = regexec(&preg->preg, str, 0, NULL, 0);
+    if (valeur == 0)
+    { // Si str vérifie le pattern
+        return 1;
+    }
+    return 0;
+    // return provided_Pattern_match(preg, str);
 }

@@ -31,8 +31,12 @@
 // #########################################################################
 // #########################################################################
 
-MAKE_NEW_2(FolderIterator, const char*, int)
+MAKE_NEW_2(FolderIterator, const char *, int)
 MAKE_DEL_0(FolderIterator)
+
+/*
+Les fonctions FolderIterator permettent d'explorer le contenu d'un dossier.
+*/
 
 /*Utilisation :
 FolderIterator it;
@@ -54,55 +58,61 @@ Si skipSpecials est vrai (il faut ignorer les sous dossiers . et ..) et qu'il y 
 
 int IMPLEMENT(FolderIterator_init)(FolderIterator *fIterator, const char *path, int skipSpecials)
 {
-    fIterator->skipSpecials=skipSpecials;
-	if(path){
-		DIR* dossier=opendir(path);
-		if (dossier){
-			fIterator->dir=dossier;
-			fIterator->ent=NULL;
-			FolderIterator_next(fIterator);
+	fIterator->skipSpecials = skipSpecials;
+	if (path)
+	{
+		DIR *dossier = opendir(path); // ouvre le dossier à path
+		if (dossier)
+		{
+			fIterator->dir = dossier;
+			fIterator->ent = NULL;
+			FolderIterator_next(fIterator); // lit le premier fichier
 			return 0;
 		}
 	}
 	return 1;
-	
-	//return provided_FolderIterator_init(fIterator, path, skipSpecials);
+
+	// return provided_FolderIterator_init(fIterator, path, skipSpecials);
 }
 
 void IMPLEMENT(FolderIterator_finalize)(FolderIterator *fIterator)
 {
-	fIterator->skipSpecials=0;
-	closedir(fIterator->dir);
-	fIterator->ent=NULL;
-	//provided_FolderIterator_finalize(fIterator);
+	fIterator->skipSpecials = 0;
+	closedir(fIterator->dir); // On ferme le dossier
+	fIterator->ent = NULL;
+	// provided_FolderIterator_finalize(fIterator);
 }
 
 int IMPLEMENT(FolderIterator_isOver)(const FolderIterator *fIterator)
 {
 	return fIterator->ent == NULL;
-	//return provided_FolderIterator_isOver(fIterator);
+	// return provided_FolderIterator_isOver(fIterator);
 }
 
-const char* IMPLEMENT(FolderIterator_get)(const FolderIterator *fIterator)
+const char *IMPLEMENT(FolderIterator_get)(const FolderIterator *fIterator)
 {
-    if(!FolderIterator_isOver(fIterator)){
-		return fIterator->ent->d_name;
+	if (!FolderIterator_isOver(fIterator))
+	{
+		return fIterator->ent->d_name; // On retourne le nom du fichier courant
 	}
 	return "";
-	//return provided_FolderIterator_get(fIterator);
+	// return provided_FolderIterator_get(fIterator);
 }
 
 int IMPLEMENT(FolderIterator_isDir)(const FolderIterator *fIterator)
 {
-    /*if(!FolderIterator_isOver(fIterator)){
-		if (fIterator->ent->d_type == DT_DIR) return 0;
+	if (!FolderIterator_isOver(fIterator))
+	{
+		if (fIterator->ent->d_type == DT_DIR)
+			return 1; // Si il s'agit d'un dossier
 	}
-	return 1;*/
-	return provided_FolderIterator_isDir(fIterator);
+	return 0;
+	// return provided_FolderIterator_isDir(fIterator);
 }
 
 void IMPLEMENT(FolderIterator_next)(FolderIterator *fIterator)
 {
+	// TODO FolderIterator_next
 	/*struct dirent* m=readdir(fIterator->dir);
 	if(m!=NULL){
 		fIterator->ent=m;
@@ -115,37 +125,55 @@ void IMPLEMENT(FolderIterator_next)(FolderIterator *fIterator)
 	provided_FolderIterator_next(fIterator);
 }
 
-MAKE_NEW_1(FileIterator, FILE*)
+MAKE_NEW_1(FileIterator, FILE *)
 MAKE_DEL_0(FileIterator)
 
-//FileIterator permet notamment de gérer les commentaires (ignorer les lignes qui débutent par #) avec getRealString (et firstNotEscaped)
+/*
+Les fonctions FileIterator permettent de lire un fichier texte (une ligne à la fois). Cet itérateur prend en charge les commentaires (tout texte situé après une dièse non doublée est donc supprimé). Les lignes vides sont conservées.
+*/
+
+// FileIterator permet notamment de gérer les commentaires (ignorer les lignes qui débutent par #) avec getRealString (et firstNotEscaped)
 
 /* 1) initialiser init et current
 2) Lire une première ligne (Conseil : Appeler next) (on doit pouvoir appeler get si isOver=false) */
 
 int IMPLEMENT(FileIterator_init)(FileIterator *fIterator, FILE *file)
 {
-    return provided_FileIterator_init(fIterator, file);
+	if (file)
+	{
+		fIterator->file = file;
+		fIterator->current = NULL;
+		FileIterator_next(fIterator); // On lit la première ligne
+		return 0;
+	}
+	return 1;
+	// return provided_FileIterator_init(fIterator, file);
 }
 
 void IMPLEMENT(FileIterator_finalize)(FileIterator *fIterator)
 {
-    provided_FileIterator_finalize(fIterator);
+	if (fIterator->current)
+	{
+		free(fIterator->current);
+	}
+	// provided_FileIterator_finalize(fIterator);
 }
 
-//Dernière ligne atteinte
+// Dernière ligne atteinte
 int IMPLEMENT(FileIterator_isOver)(const FileIterator *fIterator)
 {
-    return provided_FileIterator_isOver(fIterator);
+	return feof(fIterator->file); // On vérifie si on est à la fin du fichier
+	// return provided_FileIterator_isOver(fIterator);
 }
 
-//Renvoie current
-const char* IMPLEMENT(FileIterator_get)(const FileIterator *fIterator)
+// Renvoie current
+const char *IMPLEMENT(FileIterator_get)(const FileIterator *fIterator)
 {
-    return provided_FileIterator_get(fIterator);
+	return fIterator->current; // On retourne la ligne courante
+	// return provided_FileIterator_get(fIterator);
 }
 
-//Changer current pour qu'il contienne une nouvelle ligne
+// Changer current pour qu'il contienne une nouvelle ligne
 
 /* - Lire une ligne (Conseil : Utiliser fgets)
 - Gérer les commentaires : - getRealString - *firstNotEscaped = '\0'; si non NULL
@@ -156,5 +184,6 @@ if (firstNotEscaped) *firstNotEscaped = '\0' (on supprime tout ce qu'il y a apr�
 
 void IMPLEMENT(FileIterator_next)(FileIterator *fIterator)
 {
-    provided_FileIterator_next(fIterator);
+	// TODO FileIterator_next
+	provided_FileIterator_next(fIterator);
 }

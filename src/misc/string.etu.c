@@ -31,14 +31,21 @@
 // #########################################################################
 // #########################################################################
 
+/*
+char toLowerCase(char c) :
+
+Convertit c en minuscule si cela est possible. La fonction retourne c si la conversion n'est pas possible.
+*/
+
 char IMPLEMENT(toLowerCase)(char c)
 {
-	if (c >= 'A' && c <='Z') { //Si c fait partie de l'alphabet majuscule
-		c = (char)(c - 'A' + 'a'); //On retire l'écart entre les majuscules et minuscules dans la table ASCII
+	if (c >= 'A' && c <= 'Z') // Si c fait partie de l'alphabet majuscule
+	{
+		c = (char)(c - 'A' + 'a'); // On retire l'écart entre les majuscules et minuscules dans la table ASCII
 	}
 	return c;
-	
-    /*switch (c) {
+
+	/*switch (c) {
 		case 'A' : return 'a'; break;
 		case 'B' : return 'b'; break;
 		case 'C' : return 'c'; break;
@@ -67,58 +74,88 @@ char IMPLEMENT(toLowerCase)(char c)
 		case 'Z' : return 'z'; break;
 		default : return c;
 	};*/
-	
-	//return provided_toLowerCase(c);
+
+	// return provided_toLowerCase(c);
 }
+
+/*
+char toUpperCase(char c) :
+
+Convertit le caractère c en majuscule lorsque cela est possible.
+*/
 
 char IMPLEMENT(toUpperCase)(char c)
 {
-	if (c >= 'a' && c <='z') { //Si c fait partie de l'alphabet minuscule
-		c = (char)(c + 'A' - 'a'); //On ajoute l'écart entre les majuscules et minuscules dans la table ASCII
+	if (c >= 'a' && c <= 'z') // Si c fait partie de l'alphabet minuscule
+	{
+		c = (char)(c + 'A' - 'a'); // On ajoute l'écart entre les majuscules et minuscules dans la table ASCII
 	}
-	return c;		
-    //return provided_toUpperCase(c);
+	return c;
+	// return provided_toUpperCase(c);
 }
+
+/*
+size_t stringLength(const char *str) :
+
+Retourne la longueur d'une chaîne de caractères (le marqueur de fin de chaîne '\0' ne compte pas).
+*/
 
 size_t IMPLEMENT(stringLength)(const char *str)
 {
 	size_t i = 0;
-	while (str[i] != '\0') { //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
-		i++; //On incrémente le compteur i de 1
+	while (str[i] != '\0') // Tant que le caractère courant est différent du caractère de fin de chaine '\0'
+	{
+		i++; // On incrémente le compteur i de 1
 	}
 	return i;
-    //return provided_stringLength(str);
+	// return provided_stringLength(str);
 }
 
-char* IMPLEMENT(duplicateString)(const char *str)
+/*
+char* duplicateString(const char *str) :
+
+Retourne une nouvelle chaîne allouée sur le tas contenant une copie des caractères de str.
+*/
+
+char *IMPLEMENT(duplicateString)(const char *str)
 {
-    size_t size = stringLength(str) + 1;
-	char *r = malloc(size); //MALLOC : NE PAS OUBLIER DE FREE
-	if (r == NULL) {
+	size_t size = stringLength(str) + 1;
+	char *r = malloc(size); // MALLOC : NE PAS OUBLIER DE FREE
+	if (r == NULL)
+	{
 		return NULL;
 	}
 	copyStringWithLength(r, str, size);
 	return r;
-	//return provided_duplicateString(str);
+	// return provided_duplicateString(str);
 }
 
-const char* IMPLEMENT(findFirst)(const char *str, const char *separators)
+/*
+const char* findFirst(const char *str, const char *separators) :
+
+Retourne un pointeur sur la première occurrence de n'importe quel caractère de separators dans str, ou NULL si la chaîne ne contient pas l'un des caractères recherchés.
+*/
+
+const char *IMPLEMENT(findFirst)(const char *str, const char *separators)
 {
-    int i = 0; //Initialisation de la variable de boucle i
-	const char* ptChar = NULL; //Initialisation du pointeur constant ptChar vers un char à NULL
-	while (str[i] != '\0') { //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
-		int j = 0; //Initialisation de la variable de boucle j
-		while (separators[j] != '\0') {  //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
-			if (str[i] == separators[j]) { //Si le caractère courant est dans separators
-				ptChar = &str[i]; //Faire pointer ptChar sur le caractère courant
-				return ptChar; //Retourner le pointeur ptChar
+	int i = 0;				   // Initialisation de la variable de boucle i
+	const char *ptChar = NULL; // Initialisation du pointeur constant ptChar vers un char à NULL
+	while (str[i] != '\0')	   // Tant que le caractère courant est différent du caractère de fin de chaine '\0'
+	{
+		int j = 0;					  // Initialisation de la variable de boucle j
+		while (separators[j] != '\0') // Tant que le caractère courant est différent du caractère de fin de chaine '\0'
+		{
+			if (str[i] == separators[j]) // Si le caractère courant est dans separators
+			{
+				ptChar = &str[i]; // Faire pointer ptChar sur le caractère courant
+				return ptChar;	  // Retourner le pointeur ptChar
 			}
-			j++; //On incrémente le compteur j de 1
+			j++; // On incrémente le compteur j de 1
 		}
-		i++; //On incrémente le compteur i de 1
+		i++; // On incrémente le compteur i de 1
 	}
-	return ptChar; //Retourner le pointeur ptChar
-	
+	return ptChar; // Retourner le pointeur ptChar
+
 	/* Correction prof :
 	size_t len_sep = stringLength(separators);
 	while (*str != '\0') {
@@ -130,247 +167,362 @@ const char* IMPLEMENT(findFirst)(const char *str, const char *separators)
 		++str;
 	}
 	return 0; */
-	
-	//return provided_findFirst(str, separators);
+
+	// return provided_findFirst(str, separators);
 }
 
-char* IMPLEMENT(findLast)(char *str, char c)
+/*
+char* findLast(char *str, char c) :
+
+Retourne un pointeur sur la dernière occurrence de c dans la chaîne.
+*/
+
+char *IMPLEMENT(findLast)(char *str, char c)
 {
-    int i = 0; //Initialisation de la variable de boucle i
-	char* ptChar = NULL; //Initialisation du pointeur ptChar vers un char à NULL
-	while (str[i] != '\0') { //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
-		if (str[i] == c) { //Si le caractère courant est égal à c
-			ptChar = &str[i]; //Faire pointer ptChar sur le caractère courant
+	int i = 0;			   // Initialisation de la variable de boucle i
+	char *ptChar = NULL;   // Initialisation du pointeur ptChar vers un char à NULL
+	while (str[i] != '\0') // Tant que le caractère courant est différent du caractère de fin de chaine '\0'
+	{
+		if (str[i] == c) // Si le caractère courant est égal à c
+		{
+			ptChar = &str[i]; // Faire pointer ptChar sur le caractère courant
 		}
-		i++; //On incrémente le compteur i de 1
+		i++; // On incrémente le compteur i de 1
 	}
 	return ptChar;
-	//return provided_findLast(str, c);
+	// return provided_findLast(str, c);
 }
+
+/*
+int stringCompare(const char *str1, const char *str2) :
+
+Compare deux chaînes str1 et str2 selon l'ordre lexicographique (alphabétique). La fonction retourne un nombre négatif, 0 ou un nombre positif, si la première chaîne est, respectivement, avant, égale ou après la seconde chaîne dans l'ordre lexicographique (ordre des caractères dans la table ASCII).
+*/
 
 int IMPLEMENT(stringCompare)(const char *str1, const char *str2)
 {
-	int i = 0; //Initialisation de la variable de boucle i
-	while (str1[i] != '\0' || str2[i] != '\0') { //Tant que l'on n'est pas arrivé au bout des deux chaines
-		if (str1[i] != str2[i]) { //Si les caractères à une position i sont différents
-			if (str1[i] < str2[i]) {
-				return -1; //Retourner -1 si le caratère de str1 est plus petit que celui de str2
+	int i = 0;								   // Initialisation de la variable de boucle i
+	while (str1[i] != '\0' || str2[i] != '\0') // Tant que l'on n'est pas arrivé au bout des deux chaines
+	{
+		if (str1[i] != str2[i]) // Si les caractères à une position i sont différents
+		{
+			if (str1[i] < str2[i])
+			{
+				return -1; // Retourner -1 si le caratère de str1 est plus petit que celui de str2
 			}
-			else if (str1[i] > str2[i]) {
-				return 1; //Retourner 1 si le caratère de str1 est plus grand que celui de str2
+			else if (str1[i] > str2[i])
+			{
+				return 1; // Retourner 1 si le caratère de str1 est plus grand que celui de str2
 			}
 		}
-		i++; //Incrément de la variable de boucle i
+		i++; // Incrément de la variable de boucle i
 	}
 	return 0; // Retourner 0 si les chaines sont égales
-	
+
 	/* Correction prof :
 	while(*str1 != '\0' && *str1 == *str2) {
 		++str1;
 		++str2;
 	}
 	return *str1 - *str2; */
-	
-	//return provided_stringCompare(str1, str2);
+
+	// return provided_stringCompare(str1, str2);
 }
 
-const char* IMPLEMENT(indexOfString)(const char *foin, const char *aiguille, int csensitive)
+/*
+const char* indexOfString(const char *foin, const char *aiguille, int csensitive) :
+
+Retourne un pointeur sur la première occurrence de aiguille dans foin, ou bien NULL si la chaîne foin ne contient pas la chaîne recherchée. Le paramètre csensitive indique si cette recherche doit être sensible à la casse ou non.
+*/
+
+const char *IMPLEMENT(indexOfString)(const char *foin, const char *aiguille, int csensitive)
 {
-	size_t TailleFoin,TailleAiguille;
-	TailleFoin=stringLength(foin);
-	TailleAiguille=stringLength(aiguille);
-	if (TailleFoin<TailleAiguille){
+	size_t TailleFoin, TailleAiguille;
+	TailleFoin = stringLength(foin);
+	TailleAiguille = stringLength(aiguille);
+	if (TailleFoin < TailleAiguille)
+	{
 		return NULL;
 	}
 	size_t i;
 	int Booleen;
-	for (i=0;i<=(TailleFoin-TailleAiguille);i++){
-		Booleen=(startWith(foin,aiguille,csensitive)==NULL);
-		if (Booleen==0){
+	for (i = 0; i <= (TailleFoin - TailleAiguille); i++)
+	{
+		Booleen = (startWith(foin, aiguille, csensitive) == NULL);
+		if (Booleen == 0)
+		{
 			return foin;
 		}
 		foin++;
 	}
 	return NULL;
-	
-	//return provided_indexOfString(foin, aiguille, csensitive);
+
+	// return provided_indexOfString(foin, aiguille, csensitive);
 }
 
-char* IMPLEMENT(concatenateStrings)(const char *str1, const char *str2, size_t minDestSize)
+/*
+char* concatenateStrings(const char *str1, const char *str2, size_t minDestSize) :
+
+Retourne une nouvelle chaîne allouée sur le tas (de capacité minimale minDestSize). La nouvelle chaîne est le résultat de la concaténation des deux chaînes str1 et str2.
+*/
+
+char *IMPLEMENT(concatenateStrings)(const char *str1, const char *str2, size_t minDestSize)
 {
 	size_t taille = (stringLength(str1) + stringLength(str2)) + 1;
-	if (taille < minDestSize) {
+	if (taille < minDestSize)
+	{
 		taille = minDestSize;
 	}
-    char *str = malloc(sizeof(char)*taille); //MALLOC : NE PAS OUBLIER DE FREE
-	copyStringWithLength(str, str1, taille);
-	copyStringWithLength(str+stringLength(str1), str2, taille);
+	char *str = malloc(sizeof(char) * taille);					  // MALLOC : NE PAS OUBLIER DE FREE
+	copyStringWithLength(str, str1, taille);					  // On copie str1 dans str
+	copyStringWithLength(str + stringLength(str1), str2, taille); // On copie str2 dans str
 	return str;
-	//return provided_concatenateStrings(str1, str2, minDestSize);
+	// return provided_concatenateStrings(str1, str2, minDestSize);
 }
 
-void IMPLEMENT(copyStringWithLength)(char *dest, const char * src, size_t destSize)
+/*
+void copyStringWithLength(char *dest, const char *src, size_t destSize) :
+
+Recopie la chaîne de caractères src dans le tableau dest, de taille destSize, en tronquant si besoin (dest doit être une chaîne de caractères valide après cette opération).
+*/
+
+void IMPLEMENT(copyStringWithLength)(char *dest, const char *src, size_t destSize)
 {
-    if (destSize == 0) {
+	if (destSize == 0)
+	{
 		fatalError("destSize = 0");
 	}
 	size_t i = 0;
-	while (*src && i < destSize - 1) {
-		dest[i] = *src;
+	while (*src && i < destSize - 1)
+	{
+		dest[i] = *src; // On met src dans dest
 		src++;
 		i++;
 	}
 	dest[i] = '\0';
-	//provided_copyStringWithLength(dest, src, destSize);
+	// provided_copyStringWithLength(dest, src, destSize);
 }
 
-char* IMPLEMENT(mkReverse)(char *str)
+/*
+char* mkReverse(char *str) :
+
+Renvoie str après avoir inversé l'ordre des caractères (“abc” devient “cba”).
+*/
+
+char *IMPLEMENT(mkReverse)(char *str)
 {
-    char temp;
-	size_t TailleSTR=stringLength(str);
-	if (TailleSTR>0){
-		for (size_t i=0;i<=(TailleSTR/2)-1;i++){
-		temp=str[i];
-		str[i]=str[TailleSTR-i-1];
-		str[TailleSTR-i-1]=temp;
+	char temp;
+	size_t TailleSTR = stringLength(str);
+	if (TailleSTR > 0)
+	{
+		for (size_t i = 0; i <= (TailleSTR / 2) - 1; i++)
+		{
+			temp = str[i];
+			str[i] = str[TailleSTR - i - 1];
+			str[TailleSTR - i - 1] = temp;
 		}
 	}
 	return str;
-	//return provided_mkReverse(str);
+	// return provided_mkReverse(str);
 }
 
-const char* IMPLEMENT(startWith)(const char *str, const char *prefix, int csensitive)
+/*
+const char* startWith(const char *str, const char *prefix, int csensitive) :
+
+Retourne un pointeur sur le caractère qui suit prefix dans str si prefix est préfixe de str ou NULL si str ne commence pas par la chaîne recherchée. Le paramètre csensitive indique si cette recherche doit être sensible à la casse ou non.
+*/
+
+const char *IMPLEMENT(startWith)(const char *str, const char *prefix, int csensitive)
 {
-	while (*prefix) {
-		if ((csensitive != 0 && *prefix != *str)||(csensitive == 0 && toLowerCase(*str) != toLowerCase(*prefix))) {
+	while (*prefix)
+	{
+		if ((csensitive != 0 && *prefix != *str) || (csensitive == 0 && toLowerCase(*str) != toLowerCase(*prefix)))
+		{
 			return NULL;
 		}
 		prefix++;
 		str++;
 	}
 	return str;
-	//return provided_startWith(str, prefix, csensitive);
+	// return provided_startWith(str, prefix, csensitive);
 }
+
+/*
+int belongs(char c, const char *str) :
+
+Retourne vrai (1) si la chaîne de caractères str contient le caractère c et faux (0) sinon.
+*/
 
 int IMPLEMENT(belongs)(char c, const char *str)
 {
-	int i = 0; //Initialisation de la variable de boucle i
-	while (str[i] != '\0') { //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
-		if (str[i] == c) { //Si le caractère courant est égal à c
+	int i = 0;			   // Initialisation de la variable de boucle i
+	while (str[i] != '\0') // Tant que le caractère courant est différent du caractère de fin de chaine '\0'
+	{
+		if (str[i] == c) // Si le caractère courant est égal à c
+		{
 			return 1;
 		}
-		i++; //Incrément de la variable de boucle i
+		i++; // Incrément de la variable de boucle i
 	}
 	return 0;
-	//return provided_belongs(c, str);
+	// return provided_belongs(c, str);
 }
 
-char* IMPLEMENT(subString)(const char *start, size_t length)
+/*
+char* subString(const char *start, size_t length) :
+
+Retourne une nouvelle chaîne allouée sur le tas. La nouvelle chaîne contient les length premiers caractères, au plus, de la chaîne de caractères start.
+*/
+
+char *IMPLEMENT(subString)(const char *start, size_t length)
 {
-    size_t taille=length+1;
-	char *str = malloc(sizeof(char)*taille); //MALLOC : NE PAS OUBLIER DE FREE
-	copyStringWithLength(str,start,taille);
+	size_t taille = length + 1;
+	char *str = malloc(sizeof(char) * taille); // MALLOC : NE PAS OUBLIER DE FREE
+	copyStringWithLength(str, start, taille);  // On copie start dans str
 	return str;
-	//return provided_subString(start, length);
+	// return provided_subString(start, length);
 }
+
+/*
+void mkCommon(char *result, const char *str) :
+
+Conserve dans result le plus grand préfixe commun entre result et str.
+*/
 
 void IMPLEMENT(mkCommon)(char *result, const char *str)
 {
-    size_t tailleresult=stringLength(result);
-	size_t taillestr=stringLength(str);
-	size_t mintaille;
-	size_t i=0;
-	if (tailleresult>taillestr){
-		mintaille=taillestr;
+	size_t tailleresult = stringLength(result);
+	size_t taillestr = stringLength(str);
+	size_t mintaille = 0;
+	size_t i = 0;
+	if (tailleresult > taillestr)
+	{
+		mintaille = taillestr;
 	}
-	else{
-		mintaille=tailleresult;
+	else
+	{
+		mintaille = tailleresult;
 	}
+	// char* machaine=malloc(sizeof(char)*mintaille+1);
 	char machaine[mintaille];
-	while(result[i]==str[i] && i<mintaille){
-		machaine[i]=result[i];
+	while (result[i] == str[i] && i < mintaille)
+	{
+		machaine[i] = result[i];
 		i++;
 	}
-	copyStringWithLength(result,machaine,i+1);
-	//provided_mkCommon(result, str);
+	machaine[i] = '\0';
+	copyStringWithLength(result, machaine, i + 1); // On copie machaine dans result
+												   // provided_mkCommon(result, str);
 }
+
+/*
+int isNotEmpty(const char *str) :
+
+Retourne faux si la chaîne de caractères str est vide (ne contient que des espaces) et vrai sinon.
+*/
 
 int IMPLEMENT(isNotEmpty)(const char *str)
 {
-    int i = 0; //Initialisation de la variable de boucle i
-	while (str[i] != '\0') { //Tant que le caractère courant est différent du caractère de fin de chaine '\0'
-		if(str[i] != ' ') { //Si le caractère courant n'est pas un espace
+	int i = 0;			   // Initialisation de la variable de boucle i
+	while (str[i] != '\0') // Tant que le caractère courant est différent du caractère de fin de chaine '\0'
+	{
+		if (str[i] != ' ') // Si le caractère courant n'est pas un espace
+		{
 			return 1;
 		}
-		i++; //Incrément de la variable de boucle i
+		i++; // Incrément de la variable de boucle i
 	}
 	return 0;
-	//return provided_isNotEmpty(str);
+	// return provided_isNotEmpty(str);
 }
 
-char* IMPLEMENT(getProtString)(const char *str, char c)
+/*
+char* getProtString(const char *str, char c) :
+
+Retourne une nouvelle chaîne allouée sur le tas. Cette chaîne est obtenue en échappant (doublant) toutes les occurrences de c dans str (“s#s” devient “s##s” après échappement de “#”).
+*/
+
+char *IMPLEMENT(getProtString)(const char *str, char c)
 {
-    int j=0;
-	size_t taille=stringLength(str)+1;
-	while(str[j]!='\0'){
-		if (str[j]==c){
+	int j = 0;
+	size_t taille = stringLength(str) + 1;
+	while (str[j] != '\0')
+	{
+		if (str[j] == c)
+		{
 			taille++;
 		}
 		j++;
 	}
-	char *machaine = malloc((sizeof(char)*(taille))); //MALLOC : NE PAS OUBLIER DE FREE
-	if (!machaine){
+	char *machaine = malloc((sizeof(char) * (taille))); // MALLOC : NE PAS OUBLIER DE FREE
+	if (!machaine)// Si malloc a échoué
+	{
 		free(machaine);
 	}
-	j=0;
-	int b=0;
-	while(str[j]!='\0'){
-		machaine[b]=str[j];
-		if(str[j]==c){
+	j = 0;
+	int b = 0;
+	while (str[j] != '\0')
+	{
+		machaine[b] = str[j];
+		if (str[j] == c)
+		{
 			b++;
-			machaine[b]=str[j];
+			machaine[b] = str[j];
 		}
 		b++;
 		j++;
 	}
-	machaine[b]='\0';
+	machaine[b] = '\0';
 	return machaine;
-	//return provided_getProtString(str, c);
+	// return provided_getProtString(str, c);
 }
 
-/* "cd /pa##l/ # commentaire" -> "cd /pa#l/ # commentaire" (on laisse le # seul mais on aura placé le pointeur firstNotEscaped, 
+/*
+char* getRealString(const char *str, char c, char **firstNotEscaped) :
+
+Réalise l'opération inverse. La position du premier caractère égal à c non-échappé doit être stockée dans firstNotEscaped. firstNotEscaped est égal à NULL si un tel caractère n'existe pas.
+*/
+
+/* "cd /pa##l/ # commentaire" -> "cd /pa#l/ # commentaire" (on laisse le # seul mais on aura placé le pointeur firstNotEscaped,
 si on fait par la suite *firstNotEscaped = '\0' on aura "cd /pa#l/ " */
 
-char* IMPLEMENT(getRealString)(const char *str, char c, char **firstNotEscaped)
+char *IMPLEMENT(getRealString)(const char *str, char c, char **firstNotEscaped)
 {
-    // *firstNotEscaped = ...
+	// TODO getRealString
+	//  *firstNotEscaped = ...
 	return provided_getRealString(str, c, firstNotEscaped);
 }
 
-MAKE_NEW_2(Tokenizer, const char*, const char*)
+/*
+Les fonctions Tokenizer permettent de découper une liste de chaînes de caractères selon un ou plusieurs séparateurs, comme dans l'exemple ci-dessous.
+*/
+
+// TOKENIZER EN BONUS
+
+MAKE_NEW_2(Tokenizer, const char *, const char *)
 MAKE_DEL_0(Tokenizer)
 
 int IMPLEMENT(Tokenizer_init)(Tokenizer *tokenizer, const char *str, const char *separators)
 {
-    return provided_Tokenizer_init(tokenizer, str, separators);
+	return provided_Tokenizer_init(tokenizer, str, separators);
 }
 
 void IMPLEMENT(Tokenizer_finalize)(Tokenizer *tokenizer)
 {
-    provided_Tokenizer_finalize(tokenizer);
+	provided_Tokenizer_finalize(tokenizer);
 }
 
 int IMPLEMENT(Tokenizer_isOver)(const Tokenizer *tokenizer)
 {
-    return provided_Tokenizer_isOver(tokenizer);
+	return provided_Tokenizer_isOver(tokenizer);
 }
 
-char* IMPLEMENT(Tokenizer_get)(const Tokenizer *tokenizer)
+char *IMPLEMENT(Tokenizer_get)(const Tokenizer *tokenizer)
 {
-    return provided_Tokenizer_get(tokenizer);
+	return provided_Tokenizer_get(tokenizer);
 }
 
 void IMPLEMENT(Tokenizer_next)(Tokenizer *tokenizer)
 {
-    provided_Tokenizer_next(tokenizer);
+	provided_Tokenizer_next(tokenizer);
 }
