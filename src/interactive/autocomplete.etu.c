@@ -94,6 +94,8 @@ Niveau 5 : Plus compliqué */
 int IMPLEMENT(autocomplete)(const char *prefix, unsigned int limit, unsigned int *nbItems, char **extend, Fifo **results)
 {
 	// TODO autocomplete (levels 3 et 4)
+	/* 
+	//CODE FONCTIONNEL POUR LES LEVELS 1 ET 2 (COMMENTE POUR RELEASE, REMPLACE PAR PROVIDED_AUTOCOMPLETE)
 	if (!prefix || !limit || !nbItems || !extend || !results) // On vérifie que les paramètres sont valides
 	{
 		return 1;
@@ -159,5 +161,6 @@ int IMPLEMENT(autocomplete)(const char *prefix, unsigned int limit, unsigned int
 		}
 	}
 	return 0;
-	// return provided_autocomplete(prefix, limit, nbItems, extend, results);
+	*/
+	return provided_autocomplete(prefix, limit, nbItems, extend, results);
 }

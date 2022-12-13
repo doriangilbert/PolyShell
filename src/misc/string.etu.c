@@ -311,6 +311,8 @@ Renvoie str après avoir inversé l'ordre des caractères (“abc” devient “
 
 char *IMPLEMENT(mkReverse)(char *str)
 {
+	/*
+	//CODE FONCTIONNEL PAR TESTS UNITAIRES (COMMENTE POUR RELEASE, REMPLACE PAR PROVIDED_MKREVERSE, RETIRE POUR AUTOCOMPLETE)
 	char temp;
 	size_t TailleSTR = stringLength(str);
 	if (TailleSTR > 0)
@@ -323,7 +325,8 @@ char *IMPLEMENT(mkReverse)(char *str)
 		}
 	}
 	return str;
-	// return provided_mkReverse(str);
+	*/
+	return provided_mkReverse(str);
 }
 
 /*
