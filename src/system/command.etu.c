@@ -246,7 +246,7 @@ Niveau 3 : TRES DIFFICILE (plus difficile du projet : Le Challenge) */
 
 CmdMember *IMPLEMENT(CmdMember_addOption)(CmdMember *mbr, const char *option, int expend)
 {
-	// TODO CmdMember_addOption (minimum level 1)
+	// TODO CmdMember_addOption (level 1)
 	return provided_CmdMember_addOption(mbr, option, expend);
 }
 

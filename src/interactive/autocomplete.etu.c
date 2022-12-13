@@ -93,6 +93,7 @@ Niveau 5 : Plus compliqué */
 
 int IMPLEMENT(autocomplete)(const char *prefix, unsigned int limit, unsigned int *nbItems, char **extend, Fifo **results)
 {
+	// TODO autocomplete (levels 3 et 4)
 	if (!prefix || !limit || !nbItems || !extend || !results) // On vérifie que les paramètres sont valides
 	{
 		return 1;
